@@ -7,7 +7,8 @@ import robotturtles.g45.Board;
  * <li>Blue cards: {@link #moveForward() Turtle#moveForward()}</li>
  * <li>Yellow cards: {@link #rotate(int) Turtle#rotate(int)} with <code>int < 0</code></li>
  * <li>Purple cards: {@link #rotate(int) Turtle#rotate(int)} with <code>int > 0</code></li>
- * TODO <li>Laser cards</li>
+ * <li>Laser cards: {@link #fire() Turtle#fire()}</li>
+ * <li>Wall cards: {@link #build() Turtle#build()}</li>
  * </ul>
  * 
  * @author Tanguy Berthoud
@@ -100,6 +101,7 @@ public enum Turtle {
     /** Resets the position of the turtle.
      * 
      * @return <code>this</code> for chaining.
+     * @see Board#moveTurtle(Turtle, int, int) Board#moveTurtle(Turtle, int, int)
      */
     public final Turtle resetPosition() {
         try {
@@ -110,36 +112,34 @@ public enum Turtle {
         }
         return this;
     }
-    /** Tries to make the turtle go forward. */
+    /** Tries to make the turtle go forward.
+     * 
+     * @see Board#moveTurtle(Turtle, int, int) Board#moveTurtle(Turtle, int, int)
+     * @see #turnBack() Turtle#turnBack()
+     */
     public final void moveForward() {
         final Object beforeSquare = getNeighbors()[direction];
         if (beforeSquare == null || beforeSquare instanceof Turtle) {
-            switch (direction) {
-                case 0:
-                    try {
+            try {
+                switch (direction) {
+                    case 0:
                         board.moveTurtle(this, position[0] - 1, position[1]);
                         position[0]--;
-                    } catch (IllegalStateException exception) {}
-                    break;
-                case 1:
-                    try {
+                        break;
+                    case 1:
                         board.moveTurtle(this, position[0], position[1] + 1);
                         position[1]++;
-                    } catch (IllegalStateException exception) {}
-                    break;
-                case 2:
-                    try {
+                        break;
+                    case 2:
                         board.moveTurtle(this, position[0] + 1, position[1]);
                         position[0]++;
-                    } catch (IllegalStateException exception) {}
-                    break;
-                case 3:
-                    try {
+                        break;
+                    case 3:
                         board.moveTurtle(this, position[0], position[1] - 1);
                         position[1]--;
-                    } catch (IllegalStateException exception) {}
-                    break;
-            }
+                        break;
+                }
+            } catch (IllegalStateException exception) {}
         } else if (beforeSquare instanceof Wall) turnBack();
         else if (beforeSquare instanceof Jewel) {
             //TODO: Player finishes
@@ -147,15 +147,63 @@ public enum Turtle {
     }
 
 
+    /** Makes the turtle fire a laser.
+     * 
+     * @see Board#breakWall(Turtle) Board#breakWall(Turtle)
+     * @see #turnBack() Turtle#turnBack()
+     * @see #resetPosition() Turtle#resetPosition()
+     * @see #resetDirection() Turtle#resetDirection()
+     */
+    public final void fire() {
+        final Object beforeSquare = getNeighbors()[direction];
+        if (beforeSquare instanceof Wall) board.breakWall(this);
+        else if (beforeSquare instanceof Turtle || beforeSquare instanceof Jewel) {
+            final Turtle target = (beforeSquare instanceof Jewel) ? this : (Turtle) beforeSquare;
+            if (board.getPlayers() <= 2) target.turnBack();
+            else target.resetPosition().resetDirection();
+        }
+    }
+
+    /** Makes the turtle build a wall.
+     * 
+     * @see Board#buildWall(Turtle) Board#buildWall(Turtle)
+     */
+    public final void build() {
+        board.buildWall(this);
+    }
+
     /** Returns the neighborhood of the turtle.
      * 
      * Out-of-board squares are represented by {@link Wall#STONE Wall.STONE}.
-     * Calls {@link Board#getNeighbors(int, int)}.
      * 
-     * @return Array containing the neighbors of the <code>(i,j)</code> square.
+     * @return Array containing the neighbors of the square where the turtle is located.
      * <ol start="0"><li>Northern neighbor</li><li>Eastern neighbor</li><li>Southern neighbor</li><li>Western neighbor</li></ol>
+     * @see Board#getNeighbors(int, int) Board#getNeighbors(int, int)
      */
     public final Object[] getNeighbors() {
         return board.getNeighbors(position[0], position[1]);
+    }
+
+    /** Returns the coordinates of the square before the turtle.
+     * 
+     * @return Coordinates of the square before the turtle.
+     */
+    public final int[] getBeforeSquare() {
+        final int[] before = getPosition();
+        switch (getDirection()) {
+            case 0:
+                before[0]--;
+                break;
+            case 1:
+                before[1]++;
+                break;
+            case 2:
+                before[0]++;
+                break;
+            case 3:
+                before[1]--;
+                break;
+        }
+        return before;
     }
 }

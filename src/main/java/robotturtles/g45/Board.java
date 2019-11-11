@@ -16,6 +16,16 @@ public final class Board {
         return board;
     }
 
+    /** Number of players on the board. */
+    private int players;
+    /** Gets the number of players on the board.
+     * 
+     * @return {@link #players Board#players}
+     */
+    public final int getPlayers() {
+        return players;
+    }
+
 
     /** Constructs a new <code>Board</code>.
      * First fills {@link #board Board#board} with <code>null</code>. Then adds {@link Turtle turtles}, {@link Jewel jewels} and {@link Wall#STONE Wall.STONE} depending on <code>players</code>.
@@ -24,6 +34,7 @@ public final class Board {
      * @throws IllegalArgumentException if <code>players < 2</code> or <code>players > 4</code>.
      */
     public Board(int players) throws IllegalArgumentException {
+        this.players = players;
         for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) board[i][j] = null;
         switch (players) {
             case 2:
@@ -81,14 +92,13 @@ public final class Board {
      * @param j Column index of the square.
      * @return Array containing the neighbors of the <code>(i,j)</code> square.
      * <ol start="0"><li>Northern neighbor</li><li>Eastern neighbor</li><li>Southern neighbor</li><li>Western neighbor</li></ol>
-     * @see Turtle#getNeighbors()
      */
     public final Object[] getNeighbors(int i, int j) {
         final Object[] neighbors = {
-            (i > 0) ? getBoard()[i - 1][j] : Wall.STONE,
-            (j < 7) ? getBoard()[i][j + 1] : Wall.STONE,
-            (i < 7) ? getBoard()[i + 1][j] : Wall.STONE,
-            (j > 0) ? getBoard()[i][j - 1] : Wall.STONE
+            (i > 0) ? board[i - 1][j] : Wall.STONE,
+            (j < 7) ? board[i][j + 1] : Wall.STONE,
+            (i < 7) ? board[i + 1][j] : Wall.STONE,
+            (j > 0) ? board[i][j - 1] : Wall.STONE
         };
         return neighbors;
     }
@@ -110,5 +120,24 @@ public final class Board {
         final int[] position = turtle.getPosition();
         board[i][j] = turtle;
         board[position[0]][position[1]] = null;
+    }
+
+    /** Tries to break a wall.
+     * Only {@link Wall#ICE Wall.ICE} is destructible.
+     * 
+     * @param turtle Turtle who tries to break a wall.
+     */
+    public final void breakWall(Turtle turtle) {
+        final int[] wallPosition = turtle.getBeforeSquare();
+        if (board[wallPosition[0]][wallPosition[1]].equals(Wall.ICE)) board[wallPosition[0]][wallPosition[1]] = null;
+    }
+
+    /** Tries to build a wall.
+     * 
+     * @param turtle Turtle who tries to build a wall.
+     */
+    public final void buildWall(Turtle turtle) {
+        final int[] wallPosition = turtle.getBeforeSquare();
+        if (board[wallPosition[0]][wallPosition[1]].equals(null)) board[wallPosition[0]][wallPosition[1]] = Wall.ICE;
     }
 }
