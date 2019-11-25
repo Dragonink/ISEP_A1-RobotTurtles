@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import robotturtles.g45.tiles.*;
+import robotturtles.g45.lib.*;
+import robotturtles.g45.lib.RotatedIcon.Rotate;
 
 /**
  * Class that controls the game board.
@@ -63,7 +65,6 @@ public final class Board {
 	 */
 	public Board(int players) throws IllegalArgumentException {
 		this.players = players;
-		drawBoard();
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 				board[i][j] = null;
@@ -78,6 +79,7 @@ public final class Board {
 			board[7][3] = Jewel.BLUE;
 			for (int i = 0; i < 8; i++)
 				board[i][7] = Wall.STONE;
+			drawBoard();
 			break;
 		case 3:
 			board[0][0] = Turtle.BEEP;
@@ -94,6 +96,7 @@ public final class Board {
 			board[7][6] = Jewel.GREEN;
 			for (int i = 0; i < 8; i++)
 				board[i][7] = Wall.STONE;
+			drawBoard();
 			break;
 		case 4:
 			board[0][0] = Turtle.BEEP;
@@ -110,34 +113,83 @@ public final class Board {
 			Turtle.DOT.initPosition(0, 7);
 			board[7][1] = Jewel.BLUE;
 			board[7][6] = Jewel.RED;
+			drawBoard();
 			break;
 		default:
 			throw new IllegalArgumentException("Invalid number of players.");
 		}
 	}
+	public static void affichage (int nbJoueur) {
+		Runnable r = new Runnable() {
+	        @Override
+	        public void run() {
+	            Board board = new Board(nbJoueur);
+	
+	            JFrame frame = new JFrame("Robot Turtles");
+	            frame.add(board.getGameScene());
+	            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	            frame.setLocationByPlatform(true);
+	            frame.pack();
+	            frame.setMinimumSize(frame.getSize());
+	            frame.setMaximumSize(frame.getSize());
+	            frame.setVisible(true);
+	        }
+	    };
+	    SwingUtilities.invokeLater(r);
+	}
 
 	private final void drawBoard() {
 		gameScene.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		gameScene.setBackground(Color.black);
+		gameScene.setBackground(Color.white);
 
 		GridLayout gridlayout = new GridLayout(8, 8, 0, 0);
 		ImageIcon backgroungBoardImg = new ImageIcon(this.getClass().getResource("/resources/images/board.jpg"));
+		
 		boardContainer = new JLabel(backgroungBoardImg);
-
 		boardContainer.setLayout(gridlayout);
 		gameScene.add(boardContainer);
 
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles.length; j++) {
 				JLabel label = new JLabel();
-
-				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				ImageIcon imageIcon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-				label.setIcon(imageIcon);
+				
+				label.setBorder(BorderFactory.createLineBorder(Color.black));
+				if (board[i][j] == null) {
+					ImageIcon imageIcon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+					label.setIcon(imageIcon);
+				}else if (board[i][j] == Turtle.BEEP){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/beepTile.jpg"));
+					RotatedIcon rotateImageIcon = new RotatedIcon(imageIcon, Rotate.UPSIDE_DOWN);
+					label.setIcon(rotateImageIcon);
+				}else if (board[i][j] == Turtle.DOT){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/dotTile.jpg"));
+					RotatedIcon rotateImageIcon = new RotatedIcon(imageIcon, Rotate.UPSIDE_DOWN);
+					label.setIcon(rotateImageIcon);
+				}else if (board[i][j] == Turtle.PANGLE){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/pangleTile.jpg"));
+					RotatedIcon rotateImageIcon = new RotatedIcon(imageIcon, Rotate.UPSIDE_DOWN);
+					label.setIcon(rotateImageIcon);
+				}else if (board[i][j] == Turtle.PI){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/piTile.jpg"));
+					RotatedIcon rotateImageIcon = new RotatedIcon(imageIcon, Rotate.UPSIDE_DOWN);
+					label.setIcon(rotateImageIcon);
+				}else if (board[i][j] == Jewel.BLUE){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/jewelTileBlue.jpg"));
+					label.setIcon(imageIcon);
+				}else if (board[i][j] == Jewel.GREEN){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/jewelTileGreen.jpg"));
+					label.setIcon(imageIcon);
+				}else if (board[i][j] == Jewel.RED){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/jewelTilePurple.jpg"));
+					label.setIcon(imageIcon);
+				}else if (board[i][j] == Wall.STONE){
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/stoneWall.jpeg"));
+					label.setIcon(imageIcon);
+				}
 				tiles[i][j] = label;
 				boardContainer.add(label);
 			}
-		}
+		} 
 	}
 
 	/**
