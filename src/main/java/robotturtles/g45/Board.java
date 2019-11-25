@@ -1,6 +1,7 @@
 package robotturtles.g45;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 

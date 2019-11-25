@@ -2,9 +2,6 @@ package robotturtles.g45;
 
 import javax.swing.*;
 
-/**
- * Hello world!
- */
 public final class App {
     /**
      * Says hello to the world.
