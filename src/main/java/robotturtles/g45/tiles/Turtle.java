@@ -91,7 +91,7 @@ public enum Turtle {
      * @throws ArrayIndexOutOfBoundsException if <code>i</code> or <code>j</code> are not in <code>[0,7]</code>.
      */
     public final void initPosition(int i, int j) throws IllegalStateException, ArrayIndexOutOfBoundsException {
-        if (startPosition[0] == -1 && startPosition[1] == -1) throw new IllegalStateException("Cannot be invoked after the beginning of the game.");
+        if (startPosition[0] != -1 && startPosition[1] != -1) throw new IllegalStateException("Cannot be invoked after the beginning of the game.");
         else if (i < 0 || i > 7 || j < 0 || j > 7) throw new ArrayIndexOutOfBoundsException("Invalid position.");
         startPosition[0] = i;
         startPosition[1] = j;
