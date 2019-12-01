@@ -22,6 +22,7 @@ public final class Board {
 	private final JPanel gameScene = new JPanel(new BorderLayout(3, 3));
 	/** TODO **/
 	private JLabel boardContainer;
+	private JPanel cardContainer = new JPanel();
 	/** TODO **/
 	private JLabel[][] tiles = new JLabel[8][8];
 
@@ -130,8 +131,8 @@ public final class Board {
 	            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	            frame.setLocationByPlatform(true);
 	            frame.pack();
-	            frame.setMinimumSize(frame.getSize());
-	            frame.setMaximumSize(frame.getSize());
+	            //frame.setMinimumSize(frame.getSize());
+	            //frame.setMaximumSize(frame.getSize());
 	            frame.setVisible(true);
 	        }
 	    };
@@ -140,14 +141,21 @@ public final class Board {
 
 	private final void drawBoard() {
 		gameScene.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		gameScene.setBackground(Color.white);
-
-		GridLayout gridlayout = new GridLayout(8, 8, 0, 0);
+		gameScene.setBackground(Color.blue);
+		gameScene.setSize(1000, 2000);
+		GridLayout gridlayoutBoard = new GridLayout(8, 8, 0, 0);
 		ImageIcon backgroungBoardImg = new ImageIcon(this.getClass().getResource("/resources/images/board.jpg"));
-		
 		boardContainer = new JLabel(backgroungBoardImg);
-		boardContainer.setLayout(gridlayout);
-		gameScene.add(boardContainer);
+		
+		boardContainer.setLayout(gridlayoutBoard);
+		gameScene.add(boardContainer, BorderLayout.LINE_START);
+		
+		GridLayout gridlayoutCard = new GridLayout(3, 5, 3, 8);
+		//ImageIcon card = new ImageIcon(this.getClass().getResource("/resources/images/beepCard.jpg"));
+		cardContainer.setBackground(Color.white);
+		cardContainer.setSize(100,200);
+		cardContainer.setLayout(gridlayoutCard);
+		gameScene.add(cardContainer, BorderLayout.LINE_END);
 
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles.length; j++) {
@@ -190,6 +198,35 @@ public final class Board {
 				boardContainer.add(label);
 			}
 		} 
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 5; j++) {
+				JLabel label = new JLabel();
+				
+				label.setBorder(BorderFactory.createLineBorder(Color.black));
+				if (i==2) {
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/laserCard.png"));
+					label.setIcon(imageIcon);
+				}
+				else if (i==0 && j==1) {
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/iceWall.jpeg"));
+					label.setIcon(imageIcon);
+				}
+				else if (i==1 && j==0) {
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/beepCard.jpg"));
+					label.setIcon(imageIcon);
+				}
+				else if (i==1 && j==4) {
+					ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/resources/images/beepCard.jpg"));
+					label.setIcon(imageIcon);
+				}
+				else {
+					ImageIcon imageIcon = new ImageIcon(new BufferedImage(90, 64, BufferedImage.TYPE_INT_ARGB));
+					label.setIcon(imageIcon);
+				}
+				tiles[i][j] = label;
+				cardContainer.add(label);
+			}
+		}
 	}
 
 	/**
