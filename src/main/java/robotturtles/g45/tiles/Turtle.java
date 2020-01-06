@@ -1,5 +1,4 @@
 package robotturtles.g45.tiles;
-import javax.swing.*;
 import robotturtles.g45.Board;
 
 /** Enum of the turtles a player can control.
