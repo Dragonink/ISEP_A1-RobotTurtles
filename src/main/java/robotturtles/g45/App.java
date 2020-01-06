@@ -13,7 +13,7 @@ public final class App {
      * @param args The arguments of the program.
      */
     public static void main(String[] args) {
-    	System.out.println("Vous étes combien à jouer?");
+    	System.out.println("Vous Ãªtes combien Ã  jouer?");
     	scanner = new Scanner(System.in);
     	int nbJoueur = scanner.nextInt();
     	Board.affichage (nbJoueur);
