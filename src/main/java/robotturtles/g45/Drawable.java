@@ -1,7 +1,8 @@
 package robotturtles.g45;
 
-public interface Drawable {
-    public void draw(???){
+public interface Drawable{
+
+    public void draw(Image image){
 
     }
 }
