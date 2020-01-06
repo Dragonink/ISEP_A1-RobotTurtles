@@ -1,16 +1,16 @@
 package robotturtles.g45;
 
 public class BoardSprite implements Drawable {
-    private ??? sprite = new ???;
+    private Image sprite = new Image;
     private int posX;
     private int posY;
     private int rotation;
 
-    public ??? getSprite(){
+    public Image getSprite(){
 
     }
 
-    public void draw(){
+    public void draw(Image image){
 
     }
 }
