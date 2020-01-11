@@ -1,15 +1,19 @@
 package robotturtles.g45;
 
 public class PlayerSprite implements Drawable {
-    private Image sprite = new Image;
+    private String sprite;
     private int posX;
     private int posY;
 
-    public Image getSprite(){
-
+    public PlayerSprite(String sprite) {
+        this.sprite = sprite;
     }
 
-    public void draw(Image image){
+    public String getSprite(){
+        return "";
+    }
+
+    public void draw(String image){
 
     }
 }

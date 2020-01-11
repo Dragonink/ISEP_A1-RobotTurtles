@@ -1,17 +1,21 @@
 package robotturtles.g45;
 
+import robotturtles.g45.board.BoardWall;
+
+import javax.swing.*;
+
 /** Class of the game board. */
 public final class Board implements Drawable {
     /** Matrix containing the sprites. */
     private final BoardSprite[][] board = new BoardSprite[8][8];
 
     /** Sprite image of the board. */
-    private final Image sprite;
+    private final ImageIcon sprite;
     /** Gets the sprite image of the board.
      * 
      * @return Sprite image of the board.
      */
-    public final Image getSprite() {
+    public final ImageIcon getSprite() {
         return sprite;
     }
 
@@ -22,13 +26,12 @@ public final class Board implements Drawable {
      */
     Board(String spriteName) {
         //TODO: sprite
+        this.sprite = new ImageIcon(spriteName);
     }
 
+    // draw board
+    public void draw(String image) {
 
-    /** Draws the game board. */
-    @Override
-    public final void draw() {
-        //TODO
     }
 
     /** Gets the sprite contained in a square.
@@ -62,10 +65,10 @@ public final class Board implements Drawable {
      */
     public final BoardSprite[] getNeighbors(final int line, final int column) {
         final BoardSprite[] neighbors = new BoardSprite[4];
-        neighbors[0] = (line - 1 >= 0) ? getSquare(line - 1, column) : BoardWall.VOID;
-        neighbors[1] = (column + 1 < 8) ? getSquare(line, column + 1) : BoardWall.VOID;
-        neighbors[2] = (line + 1 < 8) ? getSquare(line + 1, column) : BoardWall.VOID;
-        neighbors[3] = (line - 1 >= 0) ? getSquare(line, column - 1) : BoardWall.VOID;
+        neighbors[0] = (line - 1 >= 0) ? getSquare(line - 1, column) : BoardWall.VOID.getSprite();
+        neighbors[1] = (column + 1 < 8) ? getSquare(line, column + 1) : BoardWall.VOID.getSprite();
+        neighbors[2] = (line + 1 < 8) ? getSquare(line + 1, column) : BoardWall.VOID.getSprite();
+        neighbors[3] = (line - 1 >= 0) ? getSquare(line, column - 1) : BoardWall.VOID.getSprite();
         return neighbors;
     }
 }

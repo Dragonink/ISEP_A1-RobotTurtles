@@ -1,10 +1,9 @@
 package robotturtles.g45;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Stack;
+import robotturtles.g45.board.Turtle;
+import robotturtles.g45.player.Card;
+
+import java.util.*;
 
 /** Class for players. */
 public final class Player {
@@ -67,7 +66,7 @@ public final class Player {
 
     /** Builds a wall on the game board.
      * 
-     * @param wall Index of the wall to build.
+     * @param wallIdx Index of the wall to build.
      * @param line Line index.
      * @param column Column index.
      * @return <code>true</code> if the wall can be built; <code>false</code> otherwise.
@@ -75,5 +74,6 @@ public final class Player {
     public final boolean buildWall(final int wallIdx, final int line, final int column) throws IllegalStateException {
         if (Game.board.getSquare(line, column) != null) throw new IllegalStateException("Location occupied.");
         //TODO
+        return true;
     }
 }

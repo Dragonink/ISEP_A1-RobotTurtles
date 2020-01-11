@@ -10,8 +10,7 @@ public final class PlayerPanel implements Drawable {
 
 
     /** Draws the player panel. */
-    @Override
-    public final void draw() {
-        //TODO
+    public void draw(String image) {
+
     }
 }
