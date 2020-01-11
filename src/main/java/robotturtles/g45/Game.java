@@ -2,6 +2,8 @@ package robotturtles.g45;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.*;
+import javax.swing.*;
 
 /** Core class of the game. */
 public final class Game {
@@ -33,7 +35,8 @@ public final class Game {
 
 
     /** Draws the main menu window. */
-    private static final void drawNewWindow() {}
+    private static final void drawNewWindow() {
+    }
 
     /** Draws the game window. */
     private static final void drawGameWindow() {}
