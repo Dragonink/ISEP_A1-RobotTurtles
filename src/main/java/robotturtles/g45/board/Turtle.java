@@ -8,7 +8,7 @@ import java.awt.*;
 
 public enum Turtle {
     BEEP("beepTile.jpg",Color.BLUE, Sprite.SPRITE_PATH+"choixBeep.jpg"),
-    PANGLE("pangleTile.jpg",Color.YELLOW,Sprite.SPRITE_PATH+"choixPangle.jpg"),
+    PANGLE("pangleTile.jpg", Color.ORANGE, Sprite.SPRITE_PATH + "choixPangle.jpg"),
     PI("piTile.jpg",Color.RED,Sprite.SPRITE_PATH+"choixPi.jpg"),
     DOT("dotTile.jpg",Color.MAGENTA,Sprite.SPRITE_PATH+"choixDot.jpg");
 

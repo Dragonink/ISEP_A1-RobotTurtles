@@ -3,11 +3,10 @@ package robotturtles.g45;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 
-public class MainPanel extends JPanel {
-    public MainPanel(GridBagLayout gridBagLayout) {
+public class BackgroundImagePanel extends JPanel {
+    public BackgroundImagePanel(GridBagLayout gridBagLayout) {
         super(gridBagLayout);
     }
 
