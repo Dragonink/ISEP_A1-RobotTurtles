@@ -36,7 +36,7 @@ public final class Player {
     Player(Turtle turtle) {
         this.turtle = turtle;
 
-        int[] cards = {18, 8, 8, 3};
+        int[] cards = {18, 8, 8, 13};
         final Random rnd = new Random();
         int nextCard = rnd.nextInt(4);
         while (availableCards.size() < 37 && cards[nextCard] > 0) {
@@ -46,7 +46,9 @@ public final class Player {
             else availableCards.push(Card.FRONT_LASER);
             cards[nextCard]--;
         }
-        for (int card = 0; card < 5; card++) hand[card] = availableCards.pop();
+        for (int card = 0; card < 5; card++) {
+            hand[card] = availableCards.pop();
+        }
     }
 
 

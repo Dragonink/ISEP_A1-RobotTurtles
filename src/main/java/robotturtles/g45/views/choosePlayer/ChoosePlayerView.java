@@ -1,5 +1,6 @@
-package robotturtles.g45;
+package robotturtles.g45.views.choosePlayer;
 
+import robotturtles.g45.BackgroundImagePanel;
 import robotturtles.g45.board.Turtle;
 
 import javax.swing.*;
@@ -11,11 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class ChoosePlayerView {
+public class ChoosePlayerView {
 
     private static final List<Turtle> turtles = Arrays.asList(Turtle.BEEP, Turtle.PANGLE, Turtle.DOT, Turtle.PI);
     private List<Turtle> chosenTurtles = new ArrayList<>();
-    private final BackgroundImagePanel backgroundImagePanel = createBackgroundImagePanel();
+    private final BackgroundImagePanel rootPanel = createRootPanel();
     private final JPanel choosePlayerPanel = createChoosePlayerPanel();
     private final JPanel numPlayerPanel = createNumPlayerPanel();
     private JLabel numPlayerLabel = createNumPlayerLabel();
@@ -25,14 +26,24 @@ class ChoosePlayerView {
     private final JPanel playButtonPanel = createPlayButtonPanel();
     private JButton backButton = createBackButton();
     private JButton playButton = createPlayButton();
+    private ChoosePlayerDelegate delegate;
 
-    ChoosePlayerView() {
+    public ChoosePlayerView(final ChoosePlayerDelegate delegate) {
+        this.delegate = delegate;
         drawChoosePlayerView();
         fillCardsPanel(createCardButtons());
     }
 
-    BackgroundImagePanel getBackgroundImagePanel() {
-        return backgroundImagePanel;
+    public BackgroundImagePanel getRootPanel() {
+        return rootPanel;
+    }
+
+    private String numPlayer() {
+        return String.format("Joueur %s : choisis ton personnage", (chosenTurtles.size() + 1));
+    }
+
+    private String numPlayerPlaceholder() {
+        return String.format("Joueur %s", (chosenTurtles.size() + 1));
     }
 
     private boolean isReadyToPlay() {
@@ -44,7 +55,7 @@ class ChoosePlayerView {
     }
 
     private void drawChoosePlayerView() {
-        backgroundImagePanel.add(choosePlayerPanel);
+        rootPanel.add(choosePlayerPanel);
         choosePlayerPanel.add(cardsPanel, BorderLayout.CENTER);
         choosePlayerPanel.add(buttonsPanel, BorderLayout.SOUTH);
         choosePlayerPanel.add(numPlayerPanel, BorderLayout.NORTH);
@@ -55,7 +66,7 @@ class ChoosePlayerView {
         playButtonPanel.add(playButton);
     }
 
-    private BackgroundImagePanel createBackgroundImagePanel() {
+    private BackgroundImagePanel createRootPanel() {
         BackgroundImagePanel panel = new BackgroundImagePanel(new GridBagLayout());
         panel.setOpaque(true);
         return panel;
@@ -75,7 +86,7 @@ class ChoosePlayerView {
     }
 
     private JLabel createNumPlayerLabel() {
-        JLabel label = new JLabel("Joueur 1", JLabel.CENTER);
+        JLabel label = new JLabel(numPlayer(), JLabel.CENTER);
         label.setFont(new Font("Serif", Font.PLAIN, 40));
         label.setBackground(Color.WHITE);
         label.setForeground(Color.BLACK);
@@ -136,6 +147,8 @@ class ChoosePlayerView {
             card.setFont(new Font("Serif", Font.BOLD, 30));
             card.setForeground(turtle.getColor());
             card.addActionListener(new OnCardActionListener());
+            card.setLayout(new GridBagLayout());
+            card.setPreferredSize(new Dimension(card.getIcon().getIconWidth(), card.getIcon().getIconHeight() + 70));
             return card;
         }).collect(Collectors.toList());
     }
@@ -145,16 +158,25 @@ class ChoosePlayerView {
         cards.forEach(cardsPanel::add);
     }
 
+    private void addPlayerPlaceholderOn(JButton button, String text) {
+        button.removeAll();
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Serif", Font.BOLD, 20));
+        label.setForeground(Color.WHITE);
+        button.add(label);
+    }
+
     private class OnCardActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             final JButton buttonClicked = ((JButton) actionEvent.getSource());
             buttonClicked.setEnabled(false);
+            addPlayerPlaceholderOn(buttonClicked, numPlayerPlaceholder());
             chosenTurtles.add(Turtle.valueOf(buttonClicked.getText()));
             playButton.setEnabled(isReadyToPlay());
             backButton.setEnabled(isCancelEnabled());
             if (chosenTurtles.size() < 4) {
-                numPlayerLabel.setText("Joueur " + (chosenTurtles.size() + 1));
+                numPlayerLabel.setText(numPlayer());
             } else {
                 numPlayerLabel.setText("C'est parti!!!");
                 numPlayerLabel.setForeground(Color.RED);
@@ -168,19 +190,23 @@ class ChoosePlayerView {
             chosenTurtles.remove(chosenTurtles.size() - 1);
             backButton.setEnabled(isCancelEnabled());
             playButton.setEnabled(isReadyToPlay());
-            numPlayerLabel.setText("Joueur " + (chosenTurtles.size() + 1));
+            numPlayerLabel.setText(numPlayer());
             numPlayerLabel.setForeground(Color.BLACK);
             List<JButton> newCards = createCardButtons();
-            newCards.forEach(button -> button.setEnabled(chosenTurtles.stream().noneMatch(turtle -> button.getText().equals(turtle.name()))));
+            newCards.forEach(button -> {
+                button.setEnabled(chosenTurtles.stream().noneMatch(turtle -> button.getText().equals(turtle.name())));
+                if (chosenTurtles.stream().anyMatch(turtle -> button.getText().equals(turtle.name()))) {
+                    addPlayerPlaceholderOn(button, String.format("Joueur %s", (chosenTurtles.indexOf(Turtle.valueOf(button.getText())) + 1)));
+                }
+            });
             fillCardsPanel(newCards);
         }
     }
 
-    private static class OnPlayActionListener implements ActionListener {
+    private class OnPlayActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-
+            delegate.onPlayClicked(chosenTurtles);
         }
     }
-
 }
