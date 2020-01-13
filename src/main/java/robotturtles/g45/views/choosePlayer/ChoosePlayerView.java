@@ -87,6 +87,7 @@ public class ChoosePlayerView {
 
     private JLabel createNumPlayerLabel() {
         JLabel label = new JLabel(numPlayer(), JLabel.CENTER);
+        label.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 5));
         label.setFont(new Font("Serif", Font.PLAIN, 40));
         label.setBackground(Color.WHITE);
         label.setForeground(Color.BLACK);
