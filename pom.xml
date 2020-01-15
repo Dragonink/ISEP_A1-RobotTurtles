@@ -19,42 +19,39 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <pluginManagement>
-            <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
-                <!-- Clean lifecycle -->
+                <!-- CLEAN lifecycle -->
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
-                <!-- Default lifecycle -->
+                <!-- DEFAULT lifecycle -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
-                    <configuration>
-                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                        <fork>true</fork>
-                        <meminitial>128m</meminitial>
-                        <maxmem>1024m</maxmem>
-                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M4</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <mainClass>robotturtles.g45.App</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-verifier-plugin</artifactId>
+                    <version>1.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
