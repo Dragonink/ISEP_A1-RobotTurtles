@@ -17,6 +17,20 @@ public final class PathFinder {
 
     /** List of coordinates already crossed when traversing. */
     private List<Integer[]> crossed;
+    /** Checks if a square has already been crossed.
+     * 
+     * @param square Coordinates of the square to check.
+     * @return {@code true} if the square has been crossed; {@code false} otherwise.
+     */
+    private final boolean isCrossed(final Integer[] square) {
+        boolean crossed = false;
+        int s = 0;
+        while (s < this.crossed.size() && !crossed) {
+            crossed = this.crossed.get(s)[0].equals(square[0]) && this.crossed.get(s)[1].equals(square[1]);
+            s++;
+        }
+        return crossed;
+    }
 
 
     /** Constructs a new {@code Path}.
@@ -48,7 +62,7 @@ public final class PathFinder {
             boolean reached = false;
             for (Integer[] neighbor : board.getNeighbors(current)) {
                 if (reached) break;
-                else if (!crossed.contains(neighbor)) reached = reached || traverse(goal, new int[] {neighbor[0], neighbor[1]});
+                else if (!isCrossed(neighbor)) reached = reached || traverse(goal, new int[] {neighbor[0], neighbor[1]});
             }
             return reached;
         }
