@@ -1,13 +1,13 @@
 package robotturtles.g45;
 
 public interface Sprite extends Drawable{
-    public static String SPRITE_PATH = "/resources/images/";
+    public static String SPRITE_PATH = "/images/";
 
-    public Image getSprite(){
-
+    public default String getSprite(){
+     return "";
     }
 
-    public void draw(Image image){
+    public default void draw(String image){
 
     }
 }
