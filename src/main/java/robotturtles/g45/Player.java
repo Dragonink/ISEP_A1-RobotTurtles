@@ -1,9 +1,14 @@
 package robotturtles.g45;
-
+import robotturtles.g45.board.BoardWall;
 import robotturtles.g45.board.Turtle;
 import robotturtles.g45.player.Card;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Random;
+import java.util.Stack;
 
 /** Class for players. */
 public final class Player {
@@ -36,15 +41,15 @@ public final class Player {
     Player(Turtle turtle) {
         this.turtle = turtle;
 
-        int[] cards = {18, 8, 8, 13};
+        int[] cardsCount = {18, 8, 8, 13};
         final Random rnd = new Random();
         int nextCard = rnd.nextInt(4);
-        while (availableCards.size() < 37 && cards[nextCard] > 0) {
+        while (availableCards.size() < 37 && cardsCount[nextCard] > 0) {
             if (nextCard == 0) availableCards.push(Card.FRONT_FORWARD);
             else if (nextCard == 1) availableCards.push(Card.FRONT_ROTATE_LEFT);
             else if (nextCard == 2) availableCards.push(Card.FRONT_ROTATE_RIGHT);
             else availableCards.push(Card.FRONT_LASER);
-            cards[nextCard]--;
+            cardsCount[nextCard]--;
         }
         for (int card = 0; card < 5; card++) {
             hand[card] = availableCards.pop();
@@ -72,10 +77,19 @@ public final class Player {
      * @param line Line index.
      * @param column Column index.
      * @return {@code true} if the wall can be built; {@code false} otherwise.
+     * @throws IllegalStateException if {@code line} or {@code column} are invalid.
      */
     public final boolean buildWall(final int wallIdx, final int line, final int column) throws IllegalStateException {
         if (Game.board.getSquare(line, column) != null) throw new IllegalStateException("Location occupied.");
-        //TODO
-        return true;
+        else if (wallIdx >= 2) {
+            Game.board.setSquare(line, column, BoardWall.BRICK.getSprite());
+            boolean blocked = false;
+            for (Integer[] turtle : Game.board.getTurtles()) for (Integer[] jewel : Game.board.getJewels()) {
+                if (blocked) break;
+                else blocked = !Game.board.existsPath(turtle, jewel);
+            }
+            if (blocked) Game.board.resetSquare(line, column);
+            return !blocked;
+        } else return Game.board.setSquare(line, column, BoardWall.ICE.getSprite());
     }
 }

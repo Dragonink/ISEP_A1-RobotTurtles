@@ -47,6 +47,17 @@ public final class PathFinder {
         if (board.checkSquare(to)) this.to = to;
         else throw new IllegalArgumentException("'to' is invalid.");
     }
+    /** Constructs a new {@code Path}.
+     * 
+     * @param board Board used to compute a path.
+     * @param obstacles List of objects that cannot be crossed on the board.
+     * @param from Coordinates of the starting square.
+     * @param to Coordinates of the goal square.
+     * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
+     */
+    public PathFinder(final Object[][] board, final List<Object> obstacles, final int[] from, final int[] to) throws IllegalArgumentException {
+        this(new TraversableBoard(board, obstacles), from, to);
+    }
 
 
     /** Traverses the {@link #board PathFinder#board}.
@@ -72,7 +83,7 @@ public final class PathFinder {
      * 
      * @return {@code true} if the path exists; {@code false} otherwise.
      */
-    boolean exists() {
+    public boolean exists() {
         crossed = new ArrayList<Integer[]>();
         return traverse(to, from);
     }

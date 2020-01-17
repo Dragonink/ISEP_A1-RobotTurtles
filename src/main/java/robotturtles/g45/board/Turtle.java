@@ -33,7 +33,7 @@ public enum Turtle {
     }
 
     public ImageIcon getImage() {
-        return this.image;
+        return image;
     }
 
     public ImageIcon getPlayerChooseIcon() {

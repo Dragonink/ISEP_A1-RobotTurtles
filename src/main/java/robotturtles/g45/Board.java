@@ -1,15 +1,40 @@
 package robotturtles.g45;
 import robotturtles.g45.board.BoardWall;
 import robotturtles.g45.board.Jewel;
+import robotturtles.g45.util.PathFinder;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.imageio.ImageIO;
 
 /** Class of the game board. */
 public final class Board implements Drawable {
     /** Matrix containing the sprites. */
     private final BoardSprite[][] board = new BoardSprite[8][8];
+
+    /** List containing the locations of the turtles. */
+    private final List<Integer[]> turtles = new ArrayList<Integer[]>(4);
+    /** Gets a list containing the locations of the turtles.
+     * 
+     * @return List containing the locations of the turtles.
+     */
+    public final List<Integer[]> getTurtles() {
+        return turtles;
+    }
+
+    /** List containing the locations of the jewels. */
+    private final List<Integer[]> jewels = new ArrayList<Integer[]>(3);
+    /** Gets a list containing the locations of the jewels.
+     * 
+     * @return List containing the locations of the jewels.
+     */
+    public final List<Integer[]> getJewels() {
+        return jewels;
+    }
 
     /** Gets the sprite image of the board.
      * 
@@ -25,26 +50,41 @@ public final class Board implements Drawable {
         switch (Game.getPlayers().length) {
             case 2:
                 board[0][1] = Game.getPlayers()[0].turtle.getSprite();
+                turtles.add(new Integer[] {0, 1});
                 board[0][5] = Game.getPlayers()[1].turtle.getSprite();
+                turtles.add(new Integer[] {0, 5});
                 board[7][3] = Jewel.GREEN.getSprite();
+                jewels.add(new Integer[] {7, 3});
                 for (int l = 0; l < 8; l++) board[l][7] = BoardWall.BRICK.getSprite();
                 break;
             case 3:
                 board[0][0] = Game.getPlayers()[0].turtle.getSprite();
+                turtles.add(new Integer[] {0, 0});
                 board[0][3] = Game.getPlayers()[1].turtle.getSprite();
+                turtles.add(new Integer[] {0, 3});
                 board[0][6] = Game.getPlayers()[2].turtle.getSprite();
+                turtles.add(new Integer[] {0, 6});
                 board[7][0] = Jewel.MAGENTA.getSprite();
+                jewels.add(new Integer[] {7, 0});
                 board[7][3] = Jewel.GREEN.getSprite();
+                jewels.add(new Integer[] {7, 3});
                 board[7][6] = Jewel.BLUE.getSprite();
+                jewels.add(new Integer[] {7, 6});
                 for (int l = 0; l < 8; l++) board[l][7] = BoardWall.BRICK.getSprite();
                 break;
             case 4:
                 board[0][0] = Game.getPlayers()[0].turtle.getSprite();
+                turtles.add(new Integer[] {0, 0});
                 board[0][2] = Game.getPlayers()[1].turtle.getSprite();
+                turtles.add(new Integer[] {0, 2});
                 board[0][5] = Game.getPlayers()[2].turtle.getSprite();
+                turtles.add(new Integer[] {0, 5});
                 board[0][7] = Game.getPlayers()[3].turtle.getSprite();
+                turtles.add(new Integer[] {0, 7});
                 board[7][1] = Jewel.MAGENTA.getSprite();
+                jewels.add(new Integer[] {7, 1});
                 board[7][6] = Jewel.BLUE.getSprite();
+                jewels.add(new Integer[] {7, 6});
                 break;
         }
     }
@@ -77,6 +117,15 @@ public final class Board implements Drawable {
         return true;
     }
 
+    /** Sets a sprite inside a square to {@code null}.
+     * 
+     * @param line Line index.
+     * @param column Column index.
+     */
+    public final void resetSquare(final int line, final int column) {
+        board[line][column] = null;
+    }
+
     /** Gets the neighboring sprites of a square.
      * 
      * @param line Line index.
@@ -90,5 +139,26 @@ public final class Board implements Drawable {
         neighbors[2] = (line + 1 < 8) ? getSquare(line + 1, column) : BoardWall.VOID.getSprite();
         neighbors[3] = (line - 1 >= 0) ? getSquare(line, column - 1) : BoardWall.VOID.getSprite();
         return neighbors;
+    }
+
+    /** Checks if a path exists.
+     * 
+     * @param from Coordinates of the starting square.
+     * @param to Coordinates of the goal square.
+     * @return {@code true} if the path exists; {@code false} otherwise.
+     * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
+     */
+    public final boolean existsPath(final int[] from, final int[] to) throws IllegalArgumentException {
+        return new PathFinder(board, Arrays.asList(new Object[] {BoardWall.BRICK, BoardWall.VOID}), from, to).exists();
+    }
+    /** Checks if a path exists.
+     * 
+     * @param from Coordinates of the starting square.
+     * @param to Coordinates of the goal square.
+     * @return {@code true} if the path exists; {@code false} otherwise.
+     * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
+     */
+    public final boolean existsPath(final Integer[] from, final Integer[] to) throws IllegalArgumentException {
+        return existsPath(new int[] {from[0], from[1]}, new int[] {to[0], to[1]});
     }
 }

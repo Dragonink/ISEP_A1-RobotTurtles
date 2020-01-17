@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Utility class for prepare a {@link robotturtles.g45.Board Board} for {@link PathFinder}. */
-public final class TraversableBoard {
+final class TraversableBoard {
     /** Board used to compute a path. */
     private final Object[][] board;
 
@@ -24,7 +24,7 @@ public final class TraversableBoard {
      * @param board Board used to compute a path.
      * @param obstacles List of objects that cannot be crossed on the board.
      */
-    public TraversableBoard(final Object[][] board, final List<Object> obstacles) {
+    TraversableBoard(final Object[][] board, final List<Object> obstacles) {
         this.board = board;
         this.obstacles = obstacles;
     }
