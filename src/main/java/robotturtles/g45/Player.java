@@ -29,7 +29,7 @@ public final class Player {
     private List<Card> ditchedCards = new ArrayList<Card>();
 
 
-    /** Constructs a new <code>Player</code>.
+    /** Constructs a new {@code Player}.
      * 
      * @param turtle Turtle of the player.
      */
@@ -71,7 +71,7 @@ public final class Player {
      * @param wallIdx Index of the wall to build.
      * @param line Line index.
      * @param column Column index.
-     * @return <code>true</code> if the wall can be built; <code>false</code> otherwise.
+     * @return {@code true} if the wall can be built; {@code false} otherwise.
      */
     public final boolean buildWall(final int wallIdx, final int line, final int column) throws IllegalStateException {
         if (Game.board.getSquare(line, column) != null) throw new IllegalStateException("Location occupied.");

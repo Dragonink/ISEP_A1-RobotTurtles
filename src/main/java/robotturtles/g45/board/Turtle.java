@@ -39,8 +39,4 @@ public enum Turtle {
     public ImageIcon getPlayerChooseIcon() {
         return playerChooseIcon;
     }
-
-    public final BoardSprite toSprite(){
-        return sprite;
-    }
 }

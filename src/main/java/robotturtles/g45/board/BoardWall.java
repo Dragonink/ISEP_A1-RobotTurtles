@@ -9,15 +9,11 @@ public enum BoardWall {
 
     private final BoardSprite sprite;
 
-    private BoardWall(String spriteName ){
+    private BoardWall(String spriteName){
         sprite = (spriteName != null) ? new BoardSprite(spriteName): null ;
     }
 
     public BoardSprite getSprite() {
-        return sprite;
-    }
-
-    public final BoardSprite toSprite(){
         return sprite;
     }
 }

@@ -8,11 +8,11 @@ public enum Jewel {
     MAGENTA("jewelTileMagenta.jpg");
 
     private final BoardSprite sprite;
-    public final BoardSprite toSprite(){
+    public final BoardSprite getSprite(){
         return sprite;
     }
 
-    private Jewel(String spriteName ){
+    private Jewel(String spriteName){
         sprite = new BoardSprite(spriteName);
     }
 

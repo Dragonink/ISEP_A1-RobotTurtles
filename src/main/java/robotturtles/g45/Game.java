@@ -1,13 +1,13 @@
 package robotturtles.g45;
-
 import robotturtles.g45.views.choosePlayer.ChoosePlayerView;
 import robotturtles.g45.views.game.GameView;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.JFrame;
 
 /**
  * Core class of the game.
@@ -60,7 +60,7 @@ public final class Game {
     }
 
     private static JFrame createMainWindow() {
-        JFrame window = new JFrame("Bienvenue sur ROBOT TURTLE'S");
+        JFrame window = new JFrame("Bienvenue sur ROBOT TURTLES");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.setLocationByPlatform(true);
