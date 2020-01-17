@@ -1,13 +1,13 @@
 package robotturtles.g45;
 
-public interface Sprite extends Drawable{
-    public static String SPRITE_PATH = "/images/";
+import java.awt.Image;
+import java.io.IOException;
 
-    public default String getSprite(){
-     return "";
-    }
+public interface Sprite extends Drawable {
+    public static final String SPRITE_PATH = "/images/";
 
-    public default void draw(String image){
+    
+    public Image getSprite() throws IOException;
 
-    }
+    public void draw();
 }

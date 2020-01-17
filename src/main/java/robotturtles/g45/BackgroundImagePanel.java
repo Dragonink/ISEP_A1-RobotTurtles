@@ -1,12 +1,16 @@
 package robotturtles.g45;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 public class BackgroundImagePanel extends JPanel {
-    public BackgroundImagePanel(GridBagLayout gridBagLayout) {
+    private static final long serialVersionUID = -6268416178703905130L;
+
+	public BackgroundImagePanel(GridBagLayout gridBagLayout) {
         super(gridBagLayout);
     }
 

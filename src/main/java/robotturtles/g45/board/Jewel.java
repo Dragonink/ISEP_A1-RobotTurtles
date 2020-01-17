@@ -1,7 +1,6 @@
 package robotturtles.g45.board;
 
 import robotturtles.g45.BoardSprite;
-import robotturtles.g45.PlayerSprite;
 
 public enum Jewel {
     BLUE("jewelTileBlue.jpg"),

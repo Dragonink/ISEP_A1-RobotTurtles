@@ -1,5 +1,9 @@
 package robotturtles.g45;
 
+import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class BoardSprite implements Drawable {
     private String sprite;
     private int posX;
@@ -10,11 +14,11 @@ public class BoardSprite implements Drawable {
         this.sprite = sprite;
     }
 
-    public String getSprite(){
-        return "";
+    public Image getSprite() throws IOException {
+        return ImageIO.read(getClass().getResource("/images/" + sprite));
     }
 
-    public void draw(String image){
-
+    public void draw() {
+        //TODO
     }
 }

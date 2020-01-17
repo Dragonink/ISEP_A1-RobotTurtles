@@ -2,36 +2,26 @@ package robotturtles.g45;
 
 import robotturtles.g45.board.BoardWall;
 
-import javax.swing.*;
+import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /** Class of the game board. */
 public final class Board implements Drawable {
     /** Matrix containing the sprites. */
     private final BoardSprite[][] board = new BoardSprite[8][8];
 
-    /** Sprite image of the board. */
-    private final ImageIcon sprite;
     /** Gets the sprite image of the board.
      * 
      * @return Sprite image of the board.
      */
-    public final ImageIcon getSprite() {
-        return sprite;
+    public final Image getSprite() throws IOException {
+        return ImageIO.read(getClass().getResource(Sprite.SPRITE_PATH + "board.jpg"));
     }
 
 
-    /** Constructs a new <code>Board</code>.
-     * 
-     * @param spriteName Filename of the image sprite.
-     */
-    Board(String spriteName) {
-        //TODO: sprite
-        this.sprite = new ImageIcon(spriteName);
-    }
-
-    // draw board
-    public void draw(String image) {
-
+    public void draw() {
+        //TODO
     }
 
     /** Gets the sprite contained in a square.
