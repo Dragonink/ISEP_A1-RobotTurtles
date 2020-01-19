@@ -41,7 +41,7 @@ public final class Player {
     Player(Turtle turtle) {
         this.turtle = turtle;
 
-        int[] cardsCount = {18, 8, 8, 13};
+        int[] cardsCount = {18, 8, 8, 3};
         final Random rnd = new Random();
         int nextCard = rnd.nextInt(4);
         while (availableCards.size() < 37 && cardsCount[nextCard] > 0) {
@@ -49,6 +49,7 @@ public final class Player {
             else if (nextCard == 1) availableCards.push(Card.FRONT_ROTATE_LEFT);
             else if (nextCard == 2) availableCards.push(Card.FRONT_ROTATE_RIGHT);
             else availableCards.push(Card.FRONT_LASER);
+            nextCard = rnd.nextInt(4);
             cardsCount[nextCard]--;
         }
         for (int card = 0; card < 5; card++) {
@@ -56,6 +57,29 @@ public final class Player {
         }
     }
 
+    public Card[] getHand() {
+        return hand;
+    }
+
+    public int getIceWalls() {
+        return iceWalls;
+    }
+
+    public int getBrickWalls() {
+        return brickWalls;
+    }
+
+    public Queue<Card> getProgram() {
+        return program;
+    }
+
+    public Stack<Card> getAvailableCards() {
+        return availableCards;
+    }
+
+    public List<Card> getDitchedCards() {
+        return ditchedCards;
+    }
 
     /** Adds a card to the player's program.
      * 

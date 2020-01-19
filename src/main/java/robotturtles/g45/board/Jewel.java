@@ -5,7 +5,7 @@ import robotturtles.g45.BoardSprite;
 public enum Jewel {
     BLUE("jewelTileBlue.jpg"),
     GREEN("jewelTileGreen.jpg"),
-    MAGENTA("jewelTileMagenta.jpg");
+    MAGENTA("jewelTilePurple.jpg");
 
     private final BoardSprite sprite;
     public final BoardSprite getSprite(){

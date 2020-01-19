@@ -4,15 +4,17 @@ import robotturtles.g45.board.Jewel;
 import robotturtles.g45.util.PathFinder;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 /** Class of the game board. */
-public final class Board implements Drawable {
+public final class Board {
     /** Matrix containing the sprites. */
     private final BoardSprite[][] board = new BoardSprite[8][8];
 
@@ -32,21 +34,15 @@ public final class Board implements Drawable {
      * 
      * @return List containing the locations of the jewels.
      */
-    public final List<Integer[]> getJewels() {
-        return jewels;
-    }
-
-    /** Gets the sprite image of the board.
-     * 
-     * @return Sprite image of the board.
-     */
-    public final Image getSprite() throws IOException {
-        return ImageIO.read(getClass().getResource(Sprite.SPRITE_PATH + "board.jpg"));
-    }
-
+    public final List<Integer[]> getJewels() { return jewels; }
 
     /** Constructs a new {@code Board}. */
     public Board() {
+        for (int i=0; i<8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[i][j] = new BoardSprite("");
+            }
+        }
         switch (Game.getPlayers().length) {
             case 2:
                 board[0][1] = Game.getPlayers()[0].turtle.getSprite();
@@ -87,11 +83,6 @@ public final class Board implements Drawable {
                 jewels.add(new Integer[] {7, 6});
                 break;
         }
-    }
-
-
-    public void draw() {
-        //TODO
     }
 
     /** Gets the sprite contained in a square.
@@ -160,5 +151,9 @@ public final class Board implements Drawable {
      */
     public final boolean existsPath(final Integer[] from, final Integer[] to) throws IllegalArgumentException {
         return existsPath(new int[] {from[0], from[1]}, new int[] {to[0], to[1]});
+    }
+
+    public BoardSprite[][] getBoard() {
+        return board;
     }
 }

@@ -7,7 +7,7 @@ public enum PlayerWall {
     ICE("iceWall.jpg");
 
     private final PlayerSprite sprite;
-    public final PlayerSprite toSprite(){
+    public final PlayerSprite getSprite(){
         return sprite;
     }
 
