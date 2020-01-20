@@ -3,8 +3,8 @@ package robotturtles.g45.player;
 import robotturtles.g45.PlayerSprite;
 
 public enum PlayerWall {
-    BRICK("stoneWall.jpg"),
-    ICE("iceWall.jpg");
+    BRICK("stoneWall2.jpg"),
+    ICE("iceWall2.jpg");
 
     private final PlayerSprite sprite;
     public final PlayerSprite getSprite(){

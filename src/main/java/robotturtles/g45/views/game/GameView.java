@@ -75,11 +75,11 @@ public class GameView {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board.getBoard()[i][j].getSprite() != null) {
-                    JLabel label = new JLabel(new ImageIcon(board.getBoard()[i][j].getSprite()));
-                    boardPanel.add(label);
-                } else {
-                    JLabel label = new JLabel(new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)));
-                    boardPanel.add(label);
+                    JButton button = new JButton(new ImageIcon(board.getBoard()[i][j].getSprite()));
+                    button.setEnabled(false);
+                    button.setDisabledIcon(new ImageIcon(board.getBoard()[i][j].getSprite()));
+                    button.setOpaque(false);
+                    boardPanel.add(button);
                 }
             }
         }

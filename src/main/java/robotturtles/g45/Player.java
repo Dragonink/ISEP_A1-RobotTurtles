@@ -95,6 +95,10 @@ public final class Player {
         //TODO
     }
 
+    public final void ditchCards() {
+        //TODO
+    }
+
     /** Builds a wall on the game board.
      * 
      * @param wallIdx Index of the wall to build.

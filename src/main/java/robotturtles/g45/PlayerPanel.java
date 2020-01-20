@@ -12,14 +12,14 @@ import java.awt.event.ActionListener;
 
 /** Class of the player panel. */
 public final class PlayerPanel {
-    public JButton[][] getPanel() {
+    public AbstractButton[][] getPanel() {
         return panel;
     }
 
     /** Matrix containing the sprites. */
-    private final JButton[][] panel = new JButton[3][5];
-    private final JButton play = createPlay();
-    private final JButton defausse = createDefausse();
+    private final AbstractButton[][] panel = new AbstractButton[3][5];
+    private final JButton play = createPlay(Game.getPlayers()[0]);
+    private final JButton defausse = createDefausse(Game.getPlayers()[0]);
 
     public PlayerPanel(Player player) {
         for (int i = 0; i < 3; i++) {
@@ -28,7 +28,7 @@ public final class PlayerPanel {
             }
         }
         for (int i = 0 ; i < player.getIceWalls()+player.getBrickWalls(); i++){
-            panel[0][i] = new JButton(new ImageIcon((i < player.getIceWalls()) ? PlayerWall.ICE.getSprite().getSprite() : PlayerWall.BRICK.getSprite().getSprite()));
+            panel[0][i] = new JToggleButton("", new ImageIcon((i < player.getIceWalls()) ? PlayerWall.ICE.getSprite().getSprite() : PlayerWall.BRICK.getSprite().getSprite()));
         }
         panel[1][0] = play;
         panel[1][2] = defausse;
@@ -44,25 +44,25 @@ public final class PlayerPanel {
         }
     }
 
-    private JButton createPlay(){
-        JButton bouton = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH+"play.jpg")));
-        bouton.addActionListener(new ActionListener() {
+    private JButton createPlay(Player player){
+        JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH+"play2.jpg")));
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("bravo");
+                player.executeProgram();
             }
         });
-        return bouton;
+        return button;
     }
 
-    private JButton createDefausse(){
-        JButton bouton = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH+"defausse.jpg")));
-        bouton.addActionListener(new ActionListener() {
+    private JButton createDefausse(Player player){
+        JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH+"defausse.jpg")));
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("bravo");
+                player.ditchCards();
             }
         });
-        return bouton;
+        return button;
     }
 }

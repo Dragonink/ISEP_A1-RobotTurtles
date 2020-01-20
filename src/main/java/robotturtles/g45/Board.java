@@ -45,20 +45,20 @@ public final class Board {
         }
         switch (Game.getPlayers().length) {
             case 2:
-                board[0][1] = Game.getPlayers()[0].turtle.getSprite();
+                board[0][1] = Game.getPlayers()[0].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 1});
-                board[0][5] = Game.getPlayers()[1].turtle.getSprite();
+                board[0][5] = Game.getPlayers()[1].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 5});
                 board[7][3] = Jewel.GREEN.getSprite();
                 jewels.add(new Integer[] {7, 3});
                 for (int l = 0; l < 8; l++) board[l][7] = BoardWall.BRICK.getSprite();
                 break;
             case 3:
-                board[0][0] = Game.getPlayers()[0].turtle.getSprite();
+                board[0][0] = Game.getPlayers()[0].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 0});
-                board[0][3] = Game.getPlayers()[1].turtle.getSprite();
+                board[0][3] = Game.getPlayers()[1].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 3});
-                board[0][6] = Game.getPlayers()[2].turtle.getSprite();
+                board[0][6] = Game.getPlayers()[2].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 6});
                 board[7][0] = Jewel.MAGENTA.getSprite();
                 jewels.add(new Integer[] {7, 0});
@@ -69,13 +69,13 @@ public final class Board {
                 for (int l = 0; l < 8; l++) board[l][7] = BoardWall.BRICK.getSprite();
                 break;
             case 4:
-                board[0][0] = Game.getPlayers()[0].turtle.getSprite();
+                board[0][0] = Game.getPlayers()[0].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 0});
-                board[0][2] = Game.getPlayers()[1].turtle.getSprite();
+                board[0][2] = Game.getPlayers()[1].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 2});
-                board[0][5] = Game.getPlayers()[2].turtle.getSprite();
+                board[0][5] = Game.getPlayers()[2].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 5});
-                board[0][7] = Game.getPlayers()[3].turtle.getSprite();
+                board[0][7] = Game.getPlayers()[3].turtle.getSpriteS();
                 turtles.add(new Integer[] {0, 7});
                 board[7][1] = Jewel.MAGENTA.getSprite();
                 jewels.add(new Integer[] {7, 1});
