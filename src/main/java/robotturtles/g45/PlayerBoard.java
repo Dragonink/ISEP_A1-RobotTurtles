@@ -78,6 +78,7 @@ public final class PlayerBoard {
     private JButton createDeckButton(ImageIcon imageIcon) {
         JButton button = new JButton(imageIcon);
         button.addActionListener(new OnDeckActionListener());
+        button.setEnabled(false);
         button.setOpaque(false);
         return button;
     }
@@ -98,6 +99,7 @@ public final class PlayerBoard {
 
     private JButton createDitchButton(Player player) {
         JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "defausse.jpg")));
+        button.setEnabled(false);
         button.setOpaque(false);
         button.addActionListener(e -> player.ditchCards());
         return button;
@@ -117,8 +119,11 @@ public final class PlayerBoard {
                 togglePlayerPanel(false);
                 panel[0][index].setEnabled(true);
                 delegate.onWallClick(index);
+
             } else {
                 togglePlayerPanel(true);
+                panel[1][2].setEnabled(false);
+                panel[1][4].setEnabled(false);
                 delegate.onWallUnclick(index);
             }
         }
@@ -135,7 +140,36 @@ public final class PlayerBoard {
     private class OnDeckActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+
             delegate.onPlayerChange();
+        }
+    }
+
+    private class OnPlayActionListener implements ItemListener {
+
+        private int index;
+
+        public OnPlayActionListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent itemEvent) {
+            if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+                togglePlayerPanel(true);
+                delegate.onWallUnclick(index);
+            } else {
+                togglePlayerPanel(true);
+                delegate.onWallUnclick(index);
+            }
+        }
+
+        private void togglePlayerPanel(boolean enabled) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 5; j++) {
+                    panel[i][j].setEnabled(enabled);
+                }
+            }
         }
     }
 }
