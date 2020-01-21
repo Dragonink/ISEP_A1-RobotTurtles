@@ -76,6 +76,7 @@ public final class Game {
     private static void drawChoosePlayerView() {
         ChoosePlayerView choosePlayerView = new ChoosePlayerView(chosenTurtles -> {
             players = chosenTurtles.stream().map(Player::new).collect(Collectors.toList());
+            board = new Board();
             draw(GameState.PLAYING);
         });
         window.add(choosePlayerView.getRootPanel());

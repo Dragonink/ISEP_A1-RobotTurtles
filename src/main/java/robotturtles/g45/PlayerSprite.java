@@ -16,7 +16,7 @@ public class PlayerSprite {
 
     public Image getSprite() {
         try{
-            return sprite.isEmpty() ? new BufferedImage(170,102, BufferedImage.TYPE_INT_ARGB) : ImageIO.read(getClass().getResource("/images/" + sprite));
+            return sprite.isEmpty() ? new BufferedImage(170,102, BufferedImage.TYPE_INT_ARGB) : ImageIO.read(getClass().getResource(Sprite.SPRITE_PATH + sprite));
         } catch (IOException e) {
             return new BufferedImage(170,102, BufferedImage.TYPE_INT_ARGB);
         }
