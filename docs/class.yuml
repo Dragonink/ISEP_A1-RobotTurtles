@@ -1,0 +1,30 @@
+// {type:class}
+// {direction:topDown}
+// {generate:true}
+
+
+[Game|+board:Board;+panel:PlayerBoard;-players:List<Player>;-winners:List<Player>;-window:JFrame;;GameState|+main(String*):void;;+getPlayers():Player*;+getWinners():Player*;+playerWins(Player):void;-createMainWindow():JFrame;-draw(GameState):void;-drawChoosePlayerView():void;-drawGameView():void]
+
+[<<enum>>;GameState|CHOOSEPLAYER;PLAYING]
+[Game]<-.-nested[<<enum>>;GameState]
+
+[Board|-board:BoardSprite**;-jewels:List<Integer*>;-startPoints:List<Integer*>|+getBoard():BoardSprite**;+getJewels():List<Integer*>;-getBlockingPos():List<Integer*>;+getTurtles():List<Integer*>;+getSquare(int,int):BoardSprite;+setSquare(int,int,BoardSprite):boolean;+resetSquare(int,int):void;+getNeighbors(int,int):BoardSprite*;+existsPath(int*,int*):boolean;+existsPath(Integer*,Integer*):boolean;+canBuildWall(int,int,int):boolean]
+[Game]++-1[Board]
+
+[BoardSprite|-sprite:String|+getSprite():Image;+isEmpty():boolean]
+[Board]++-[BoardSprite]
+
+[Player|-availableCards:Stack<Card>;-brickWalls:int;-ditchedCards:List<Card>;-hand:Card*;-iceWalls:int;-program:Queue<Card>;+Turtle turtle|+getAvailableCards():Stack<Card>;+getBrickWalls():int;+getDitchedCards():List<Card>;+getHand():Card*;+getIceWalls():int;+getProgram():Queue<Card>;+addToProgram(int):void;+executeProgram():void;+ditchCard(int):void;+pickCards():void]
+[Game]++-2..4[Player]
+
+[<<enum>>;Card|FRONT_FORWARD;FRONT_ROTATE_LEFT;FRONT_ROTATE_RIGHT;FRONT_LASER;BACK_BEEP;BACK_PANGLE;BACK_PI;BACK_DOT;;-sprite:PlayerSprite|+getSprite():PlayerSprite]
+[Player]++-37[<<enum>>;Card]
+
+[PlayerSprite|-sprite:String|+getSprite():Image]
+
+[<<enum>>;Turtle|BEEP;PANGLE;PI;DOT;;-color:Color;-playerChooseIcon:ImageIcon;-posI:int;-posJ:int;-rotation:int;-spriteE:BoardSprite;-spriteN:BoardSprite;-spriteS:BoardSprite;-spriteW:BoardSprite;-startPosI:int;-startPosJ:int|+getColor():Color;+getPlayerChooseIcon():ImageIcon;+getPos():Integer*;+getRotation():int;+getSprite():BoardSprite;+getStartPos():Integer*;+setPos(int,int):void;+setRotation(int):void;+setStartPos(int,int):void;+reset():void]
+[BoardSprite]4-++[<<enum>>;Turtle]
+[Player]+-[<<enum>>;Turtle]
+
+[PlayerBoard|]
+[Game]++-1[PlayerBoard]
