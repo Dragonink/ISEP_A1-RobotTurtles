@@ -1,13 +1,13 @@
 package robotturtles.g45;
+
 import robotturtles.g45.views.choosePlayer.ChoosePlayerView;
 import robotturtles.g45.views.game.GameView;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.JFrame;
 
 /**
  * Core class of the game.
@@ -29,7 +29,7 @@ public final class Game {
     /**
      * Control panel for a player.
      */
-    public static PlayerPanel panel;
+    public static PlayerBoard panel;
 
     /**
      * List of the players, in play order.

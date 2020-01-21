@@ -1,17 +1,13 @@
 package robotturtles.g45;
+
 import robotturtles.g45.board.BoardWall;
 import robotturtles.g45.board.Jewel;
 import robotturtles.g45.util.PathFinder;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 
 /** Class of the game board. */
 public final class Board {
@@ -103,7 +99,7 @@ public final class Board {
      * @return {@code true} if the sprite has been set; {@code false} otherwise.
      */
     public final boolean setSquare(final int line, final int column, final BoardSprite sprite) {
-        if (getSquare(line, column) != null) return false;
+        if (!(getSquare(line, column).getSprite() instanceof BufferedImage)) return false;
         else board[line][column] = sprite;
         return true;
     }
@@ -155,5 +151,29 @@ public final class Board {
 
     public BoardSprite[][] getBoard() {
         return board;
+    }
+
+    /**
+     * Builds a wall on the game board.
+     *
+     * @param wallIdx Index of the wall to build.
+     * @param line    Line index.
+     * @param column  Column index.
+     * @return {@code true} if the wall can be built; {@code false} otherwise.
+     * @throws IllegalStateException if {@code line} or {@code column} are invalid.
+     */
+    public boolean buildWall(final int wallIdx, final int line, final int column) {
+        if (!(getSquare(line, column).getSprite() instanceof BufferedImage)) return false;
+        else if (wallIdx >= 2) {
+            setSquare(line, column, BoardWall.BRICK.getSprite());
+            boolean blocked = false;
+            for (Integer[] turtle : getTurtles())
+                for (Integer[] jewel : getJewels()) {
+                    if (blocked) break;
+                    else blocked = !existsPath(turtle, jewel);
+                }
+            if (blocked) resetSquare(line, column);
+            return !blocked;
+        } else return setSquare(line, column, BoardWall.ICE.getSprite());
     }
 }

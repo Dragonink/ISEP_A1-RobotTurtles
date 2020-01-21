@@ -1,24 +1,60 @@
 package robotturtles.g45.views.game;
 
-import robotturtles.g45.*;
+import robotturtles.g45.Board;
+import robotturtles.g45.BoardImagePanel;
+import robotturtles.g45.Game;
+import robotturtles.g45.PlayerBoard;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameView {
 
+    private final GameDelegate gameDelegate = new GameDelegate() {
+        @Override
+        public void onWallClick(int wallIdx) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    boolean isCellAvailable = board.buildWall(wallIdx, i, j);
+                    boardCells[i][j].setEnabled(isCellAvailable);
+                    boardCells[i][j].setOpaque(isCellAvailable);
+                }
+            }
+        }
+
+        @Override
+        public void onWallUnclick(int wallIdx) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    boardCells[i][j].setEnabled(false);
+                    boardCells[i][j].setOpaque(false);
+                }
+            }
+        }
+
+        @Override
+        public void onPlayerChange() {
+            changeActivePlayer();
+        }
+    };
     private JPanel rootPanel = createRootPanel();
     private JPanel infoPlayerPanel = createInfoPlayerPanel();
     private JLabel infoPlayerLabel = createInfoPlayerLabel();
     private JPanel gamePanel = createGamePanel();
     private JPanel boardPanel = createBoardPanel();
     private JPanel playerPanel = createPlayerPanel();
+    private List<PlayerBoard> playerBoards = createPlayerBoards();
     private Board board = new Board();
+    private JButton[][] boardCells = new JButton[8][8];
+    private int activePlayerIndex = 0;
 
     public GameView() {
         drawGameView();
+        setupUIForPlayer();
         fillBoard();
+        fillPlayerPanel();
     }
 
     public JPanel getRootPanel() {
@@ -26,7 +62,7 @@ public class GameView {
     }
 
     private String numPlayer() {
-        return String.format("Joueur %s : %s", (1), (Game.getPlayers()[0].turtle.name()));
+        return String.format("Joueur %s : %s", activePlayerIndex + 1, (Game.getPlayers()[activePlayerIndex].turtle.name()));
     }
 
     private void drawGameView() {
@@ -40,7 +76,6 @@ public class GameView {
     private JPanel createRootPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(20, 20));
-        panel.setBackground(Game.getPlayers()[0].turtle.getColor());
         return panel;
     }
 
@@ -52,7 +87,6 @@ public class GameView {
 
     private JLabel createInfoPlayerLabel() {
         JLabel label = new JLabel();
-        label.setText(numPlayer());
         label.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 5));
         label.setFont(new Font("Serif", Font.PLAIN, 40));
         label.setBackground(Game.getPlayers()[0].turtle.getColor());
@@ -61,43 +95,69 @@ public class GameView {
     }
 
     private JPanel createGamePanel() {
-        JPanel panel = new JPanel(new GridLayout(1,2, 30, 30));
+        JPanel panel = new JPanel(new GridLayout(1, 2, 30, 30));
         panel.setOpaque(false);
         return panel;
     }
 
     private JPanel createBoardPanel() {
-        BoardImagePanel panel = new BoardImagePanel(new GridLayout(8, 8));
-        return panel;
+        return new BoardImagePanel(new GridLayout(8, 8));
+    }
+
+    private JPanel createPlayerPanel() {
+        return new JPanel(new GridLayout(3, 5));
+    }
+
+    private JButton createBoardCell(ImageIcon imageIcon) {
+        JButton button = new JButton(imageIcon);
+        button.setDisabledIcon(imageIcon);
+        button.setEnabled(false);
+        button.setOpaque(false);
+        return button;
     }
 
     private void fillBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board.getBoard()[i][j].getSprite() != null) {
-                    JButton button = new JButton(new ImageIcon(board.getBoard()[i][j].getSprite()));
-                    button.setEnabled(false);
-                    button.setDisabledIcon(new ImageIcon(board.getBoard()[i][j].getSprite()));
-                    button.setOpaque(false);
-                    boardPanel.add(button);
+                    JButton boardCell = createBoardCell(new ImageIcon(board.getBoard()[i][j].getSprite()));
+                    boardCells[i][j] = boardCell;
+                    boardPanel.add(boardCell);
                 }
             }
         }
     }
 
-    private JPanel createPlayerPanel() {
-        JPanel panel = new JPanel(new GridLayout(3, 5));
-        PlayerPanel joueur = new PlayerPanel(Game.getPlayers()[0]);
+    private List<PlayerBoard> createPlayerBoards() {
+        List<PlayerBoard> playerBoards = new ArrayList<>();
+        for (int i = 0; i < Game.getPlayers().length; i++) {
+            playerBoards.add(new PlayerBoard(Game.getPlayers()[i], gameDelegate, i));
+        }
+        return playerBoards;
+    }
+
+    private void fillPlayerPanel() {
+        playerPanel.removeAll();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
-                if (joueur.getPanel()[i][j] != null) {
-                    panel.add(joueur.getPanel()[i][j]);
-                } else {
-                    JLabel label = new JLabel(new ImageIcon(new BufferedImage(170, 102, BufferedImage.TYPE_INT_ARGB)));
-                    panel.add(label);
-                }
+                playerPanel.add(playerBoards.get(activePlayerIndex).getPanel()[i][j]);
             }
         }
-        return panel;
+    }
+
+    private void changeActivePlayer() {
+        if (activePlayerIndex == Game.getPlayers().length - 1) {
+            activePlayerIndex = 0;
+        } else {
+            activePlayerIndex += 1;
+        }
+
+        setupUIForPlayer();
+    }
+
+    private void setupUIForPlayer() {
+        rootPanel.setBackground(Game.getPlayers()[activePlayerIndex].turtle.getColor());
+        infoPlayerLabel.setText(numPlayer());
+        fillPlayerPanel();
     }
 }
