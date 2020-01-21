@@ -49,6 +49,9 @@ public final class Game {
      * List of the winning players.
      */
     private static final List<Player> winners = new ArrayList<Player>(3);
+    public static final void playerWins(Player player) {
+        if (players.remove(player)) winners.add(player);
+    }
 
     /**
      * Gets an array of the winning players.

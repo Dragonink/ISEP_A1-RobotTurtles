@@ -14,48 +14,46 @@ public final class Board {
     /** Matrix containing the sprites. */
     private final BoardSprite[][] board = new BoardSprite[8][8];
 
-    /** List containing the locations of the turtles. */
-    private final List<Integer[]> turtles = new ArrayList<Integer[]>(4);
-    /** Gets a list containing the locations of the turtles.
-     * 
-     * @return List containing the locations of the turtles.
-     */
     public final List<Integer[]> getTurtles() {
+        List<Integer[]> turtles = new ArrayList<Integer[]>();
+        for (Player player : Game.getPlayers()) turtles.add(player.turtle.getPos());
         return turtles;
+    }
+
+    /** List containing the starting locations of the turtles. */
+    private final List<Integer[]> startPoints = new ArrayList<Integer[]>(4);
+    private final List<Integer[]> getBlockingPos() {
+        List<Integer[]> blockingPos = new ArrayList<Integer[]>(startPoints);
+        for (Player player : Game.getPlayers()) blockingPos.add(player.turtle.getPos());
+        return blockingPos;
     }
 
     /** List containing the locations of the jewels. */
     private final List<Integer[]> jewels = new ArrayList<Integer[]>(3);
-    /** Gets a list containing the locations of the jewels.
-     * 
-     * @return List containing the locations of the jewels.
-     */
-    public final List<Integer[]> getJewels() { return jewels; }
+    public final List<Integer[]> getJewels() {
+        return jewels;
+    }
 
     /** Constructs a new {@code Board}. */
     public Board() {
-        for (int i=0; i<8; i++) {
-            for (int j = 0; j < 8; j++) {
-                board[i][j] = new BoardSprite("");
-            }
-        }
+        for (int i=0; i<8; i++) for (int j = 0; j < 8; j++) board[i][j] = new BoardSprite("");
         switch (Game.getPlayers().length) {
             case 2:
                 board[0][1] = Game.getPlayers()[0].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 1});
+                Game.getPlayers()[0].turtle.setStartPos(0, 1);
                 board[0][5] = Game.getPlayers()[1].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 5});
+                Game.getPlayers()[1].turtle.setStartPos(0, 5);
                 board[7][3] = Jewel.GREEN.getSprite();
                 jewels.add(new Integer[] {7, 3});
                 for (int l = 0; l < 8; l++) board[l][7] = BoardWall.BRICK.getSprite();
                 break;
             case 3:
                 board[0][0] = Game.getPlayers()[0].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 0});
+                Game.getPlayers()[0].turtle.setStartPos(0, 0);
                 board[0][3] = Game.getPlayers()[1].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 3});
+                Game.getPlayers()[1].turtle.setStartPos(0, 3);
                 board[0][6] = Game.getPlayers()[2].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 6});
+                Game.getPlayers()[2].turtle.setStartPos(0, 6);
                 board[7][0] = Jewel.MAGENTA.getSprite();
                 jewels.add(new Integer[] {7, 0});
                 board[7][3] = Jewel.GREEN.getSprite();
@@ -66,13 +64,13 @@ public final class Board {
                 break;
             case 4:
                 board[0][0] = Game.getPlayers()[0].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 0});
+                Game.getPlayers()[0].turtle.setStartPos(0, 0);
                 board[0][2] = Game.getPlayers()[1].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 2});
+                Game.getPlayers()[1].turtle.setStartPos(0, 2);
                 board[0][5] = Game.getPlayers()[2].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 5});
+                Game.getPlayers()[2].turtle.setStartPos(0, 5);
                 board[0][7] = Game.getPlayers()[3].turtle.getSpriteS();
-                turtles.add(new Integer[] {0, 7});
+                Game.getPlayers()[3].turtle.setStartPos(0, 7);
                 board[7][1] = Jewel.MAGENTA.getSprite();
                 jewels.add(new Integer[] {7, 1});
                 board[7][6] = Jewel.BLUE.getSprite();
@@ -165,12 +163,11 @@ public final class Board {
         else if (wallIdx >= 2) {
             setSquare(line, column, BoardWall.BRICK.getSprite());
             boolean blocked = false;
-            for (Integer[] turtle : getTurtles())
-                for (Integer[] jewel : getJewels()) {
-                    if (blocked) break;
-                    else blocked = !existsPath(turtle, jewel);
-                }
-            if (blocked) resetSquare(line, column);
+            for (Integer[] turtle : getBlockingPos()) for (Integer[] jewel : jewels) {
+                if (blocked) break;
+                else blocked = !existsPath(turtle, jewel);
+            }
+            resetSquare(line, column);
             return !blocked;
         } else return true;
     }

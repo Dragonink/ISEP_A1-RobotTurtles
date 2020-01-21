@@ -1,5 +1,6 @@
 package robotturtles.g45;
 
+import robotturtles.g45.board.BoardWall;
 import robotturtles.g45.board.Turtle;
 import robotturtles.g45.player.Card;
 
@@ -109,7 +110,81 @@ public final class Player {
      * Executes the player's program.
      */
     public final void executeProgram() {
-        //TODO
+        for (Card card = program.poll(); !card.equals(null); card = program.poll()) {
+            if (card.equals(Card.FRONT_ROTATE_LEFT)) turtle.setRotation(turtle.getRotation() - 1);
+            else if (card.equals(Card.FRONT_ROTATE_RIGHT)) turtle.setRotation(turtle.getRotation() + 1);
+            else if (card.equals(Card.FRONT_FORWARD)) {
+                Integer[] pos = turtle.getPos();
+                switch (turtle.getRotation()) {
+                    case 0:
+                        pos[0]--;
+                        break;
+                    case 1:
+                        pos[1]++;
+                        break;
+                    case 2:
+                        pos[0]++;
+                        break;
+                    case 3:
+                        pos[1]--;
+                        break;
+                }
+                if (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8) {
+                    if (Game.board.getSquare(pos[0], pos[1]).equals(null) || Game.board.getSquare(pos[0], pos[1]).isEmpty()) {// Move if square is empty
+                        Game.board.setSquare(pos[0], pos[1], turtle.getSprite());
+                        Game.board.resetSquare(pos[0], pos[1]);
+                        turtle.setPos(pos[0], pos[1]);
+                    } else if (Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()) || Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.ICE.getSprite())) turtle.setRotation(turtle.getRotation() + 2);// Rotate if square is wall
+                    else {
+                        for (Integer[] turtle : Game.board.getTurtles()) if (pos[0].equals(turtle[0]) && pos[1].equals(turtle[1])) {// Reset positions of both turtles
+                            for (Player player: Game.getPlayers()) if (player.turtle.getPos()[0].equals(pos[0]) && player.turtle.getPos()[1].equals(pos[1])) {
+                                player.turtle.reset();
+                                break;
+                            }
+                            this.turtle.reset();
+                            break;
+                        }
+                        for (Integer[] jewel : Game.board.getJewels()) if (pos[0].equals(jewel[0]) && pos[1].equals(jewel[1])) {// Win if square is jewel
+                            Game.playerWins(this);
+                            Game.board.resetSquare(turtle.getPos()[0], turtle.getPos()[1]);
+                            return;
+                        }
+                    }
+                } else turtle.setRotation(turtle.getRotation() + 2);// Rotate if board border
+            } else if (card.equals(Card.FRONT_LASER)) {
+                Integer[] pos = turtle.getPos();
+                int direction = 1;
+                do {
+                    switch (turtle.getRotation()) {
+                        case 0:
+                            pos[0] -= direction;
+                            break;
+                        case 1:
+                            pos[1] += direction;
+                            break;
+                        case 2:
+                            pos[0] += direction;
+                            break;
+                        case 3:
+                            pos[1] -= direction;
+                            break;
+                    }
+                    if (Game.board.getSquare(pos[0], pos[1]).equals(null) || Game.board.getSquare(pos[0], pos[1]).isEmpty()) continue;
+                    else if (Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.ICE.getSprite())) Game.board.resetSquare(pos[0], pos[1]);
+                    else {
+                        for (Player player : Game.getPlayers()) if (player.turtle.getPos()[0].equals(pos[0]) && player.turtle.getPos()[1].equals(pos[1])) {
+                            if (Game.getPlayers().length > 2) player.turtle.reset();
+                            else player.turtle.setRotation(player.turtle.getRotation() + 2);
+                            break;
+                        }
+                        for (Integer[] jewel : Game.board.getJewels()) if (pos[0].equals(jewel[0]) && pos[1].equals(jewel[1])) {
+                            direction = -direction;
+                            break;
+                        }
+                    }
+                } while (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
+            }
+        }
     }
 
     public final void ditchCard(final int cardIdx) {

@@ -7,8 +7,6 @@ import javax.imageio.ImageIO;
 
 public class PlayerSprite {
     private String sprite;
-    private int posX;
-    private int posY;
 
     public PlayerSprite(String sprite) {
         this.sprite = sprite;

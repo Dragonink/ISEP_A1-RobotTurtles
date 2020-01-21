@@ -7,9 +7,6 @@ import javax.imageio.ImageIO;
 
 public class BoardSprite {
     private String sprite;
-    private int posX;
-    private int posY;
-    private int rotation;
 
     public BoardSprite(String sprite) {
         this.sprite = sprite;
