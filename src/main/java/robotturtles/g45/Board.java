@@ -153,17 +153,15 @@ public final class Board {
         return board;
     }
 
-    /**
-     * Builds a wall on the game board.
-     *
-     * @param wallIdx Index of the wall to build.
-     * @param line    Line index.
-     * @param column  Column index.
-     * @return {@code true} if the wall can be built; {@code false} otherwise.
-     * @throws IllegalStateException if {@code line} or {@code column} are invalid.
+    /** Checks if a wall can be build on a square.
+     * 
+     * @param wallIdx Index of the wall.
+     * @param line Line index of the square.
+     * @param column Column index of the square.
+     * @return {@code true} if the wall can be build; {@code false} otherwise.
      */
-    public boolean buildWall(final int wallIdx, final int line, final int column) {
-        if (!(getSquare(line, column).getSprite() instanceof BufferedImage)) return false;
+    public boolean canBuildWall(final int wallIdx, final int line, final int column) {
+        if (!getSquare(line, column).equals(null) && !getSquare(line, column).isEmpty()) return false;
         else if (wallIdx >= 2) {
             setSquare(line, column, BoardWall.BRICK.getSprite());
             boolean blocked = false;
@@ -174,6 +172,6 @@ public final class Board {
                 }
             if (blocked) resetSquare(line, column);
             return !blocked;
-        } else return setSquare(line, column, BoardWall.ICE.getSprite());
+        } else return true;
     }
 }

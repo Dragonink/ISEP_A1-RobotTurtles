@@ -17,9 +17,13 @@ public class BoardSprite {
 
     public Image getSprite() {
         try{
-            return sprite.isEmpty() ? new BufferedImage(64,64, BufferedImage.TYPE_INT_ARGB) : ImageIO.read(getClass().getResource("/images/" + sprite));
+            return sprite.isEmpty() ? new BufferedImage(64,64, BufferedImage.TYPE_INT_ARGB) : ImageIO.read(getClass().getResource(Sprite.SPRITE_PATH + sprite));
         } catch (IOException e) {
             return new BufferedImage(64,64, BufferedImage.TYPE_INT_ARGB);
         }
+    }
+
+    public boolean isEmpty() {
+        return sprite.equals(null) || sprite.equals("");
     }
 }
