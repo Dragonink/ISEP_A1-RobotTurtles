@@ -71,6 +71,7 @@ public final class PlayerBoard {
 
     private JButton createHandButton(ImageIcon imageIcon) {
         JButton button = new JButton(imageIcon);
+        //button.addActionListener(new OnHandActionListener());
         button.setOpaque(false);
         return button;
     }
@@ -145,21 +146,34 @@ public final class PlayerBoard {
         }
     }
 
-    private class OnPlayActionListener implements ItemListener {
+    private class OnHandActionListener implements ItemListener {
 
         private int index;
+        private Player player;
 
-        public OnPlayActionListener(int index) {
+        public OnHandActionListener(int index, Player player) {
             this.index = index;
+            this.player = player;
         }
 
         @Override
         public void itemStateChanged(ItemEvent itemEvent) {
             if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-                togglePlayerPanel(true);
-                delegate.onWallUnclick(index);
+                togglePlayerPanel(false);
+                panel[0][index].setEnabled(true);
+                panel[1][0].setEnabled(true);
+                for (int i = 0; i < 5 ; i++){
+                    if (player.getHand()[i] == null) {
+                        panel[1][2].setEnabled(true);
+                        panel[1][4].setEnabled(true);
+                    }
+                }
+                player.addToProgram(index);
+
             } else {
                 togglePlayerPanel(true);
+                panel[1][2].setEnabled(false);
+                panel[1][4].setEnabled(false);
                 delegate.onWallUnclick(index);
             }
         }
@@ -172,4 +186,5 @@ public final class PlayerBoard {
             }
         }
     }
+
 }
