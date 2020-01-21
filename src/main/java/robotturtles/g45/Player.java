@@ -110,7 +110,7 @@ public final class Player {
      * Executes the player's program.
      */
     public final void executeProgram() {
-        for (Card card = program.poll(); !card.equals(null); card = program.poll()) {
+        for (Card card = program.poll(); card != null; card = program.poll()) {
             if (card.equals(Card.FRONT_ROTATE_LEFT)) turtle.setRotation(turtle.getRotation() - 1);
             else if (card.equals(Card.FRONT_ROTATE_RIGHT)) turtle.setRotation(turtle.getRotation() + 1);
             else if (card.equals(Card.FRONT_FORWARD)) {
@@ -130,7 +130,7 @@ public final class Player {
                         break;
                 }
                 if (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8) {
-                    if (Game.board.getSquare(pos[0], pos[1]).equals(null) || Game.board.getSquare(pos[0], pos[1]).isEmpty()) {// Move if square is empty
+                    if (Game.board.getSquare(pos[0], pos[1]) == null || Game.board.getSquare(pos[0], pos[1]).isEmpty()) {// Move if square is empty
                         Game.board.setSquare(pos[0], pos[1], turtle.getSprite());
                         Game.board.resetSquare(pos[0], pos[1]);
                         turtle.setPos(pos[0], pos[1]);
@@ -169,7 +169,8 @@ public final class Player {
                             pos[1] -= direction;
                             break;
                     }
-                    if (Game.board.getSquare(pos[0], pos[1]).equals(null) || Game.board.getSquare(pos[0], pos[1]).isEmpty()) continue;
+                    if (Game.board.getSquare(pos[0], pos[1]) == null || Game.board.getSquare(pos[0], pos[1]).isEmpty())
+                        continue;
                     else if (Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.ICE.getSprite())) Game.board.resetSquare(pos[0], pos[1]);
                     else {
                         for (Player player : Game.getPlayers()) if (player.turtle.getPos()[0].equals(pos[0]) && player.turtle.getPos()[1].equals(pos[1])) {
@@ -193,12 +194,14 @@ public final class Player {
     }
 
     public final void pickCards() {
-        for (int c = 0; c < hand.length; c++) if (hand[c].equals(null)) {
-            if (availableCards.empty()) {
-                availableCards.addAll(ditchedCards);
-                ditchedCards.clear();
+        for (int c = 0; c < hand.length; c++) {
+            if (hand[c] == null) {
+                if (availableCards.empty()) {
+                    availableCards.addAll(ditchedCards);
+                    ditchedCards.clear();
+                }
+                hand[c] = availableCards.pop();
             }
-            hand[c] = availableCards.pop();
         }
     }
 }

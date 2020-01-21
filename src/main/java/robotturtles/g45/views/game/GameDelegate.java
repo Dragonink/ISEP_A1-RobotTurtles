@@ -6,4 +6,6 @@ public interface GameDelegate {
     void onWallUnclick(int wallIdx);
 
     void onPlayerChange();
+
+    void onBoardCellClick(int xPos, int yPos);
 }

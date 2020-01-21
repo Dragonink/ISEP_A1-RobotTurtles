@@ -18,16 +18,18 @@ public final class PlayerBoard {
      * Matrix containing the sprites.
      */
     private final AbstractButton[][] panel = new AbstractButton[3][5];
-    private final JButton playButton;
+    private final JToggleButton playButton;
     private final JButton ditchButton;
+    private final int numPlayer;
     private final GameDelegate delegate;
 
 
     public PlayerBoard(Player player, GameDelegate delegate, int numPlayer) {
 
         this.delegate = delegate;
-        this.playButton = createPlayButton(Game.getPlayers()[numPlayer]);
-        this.ditchButton = createDitchButton(Game.getPlayers()[numPlayer]);
+        this.numPlayer = numPlayer;
+        this.playButton = createPlayButton();
+        this.ditchButton = createDitchButton();
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
@@ -69,9 +71,9 @@ public final class PlayerBoard {
         return button;
     }
 
-    private JButton createHandButton(ImageIcon imageIcon, int index) {
-        JButton button = new JButton(imageIcon);
-        // TODO : button.addActionListener(new OnHandActionListener()); // mettre en paramétre le joueur et l'index de la carte
+    private JToggleButton createHandButton(ImageIcon imageIcon, int index) {
+        JToggleButton button = new JToggleButton(imageIcon);
+        button.addItemListener(new OnHandActionListener(index));
         button.setOpaque(false);
         return button;
     }
@@ -85,25 +87,74 @@ public final class PlayerBoard {
     }
 
     private JToggleButton createWallButton(boolean hasEnoughIceWalls, int columnIndex) {
-        JToggleButton toggleButton = new JToggleButton(null, new ImageIcon(hasEnoughIceWalls ? PlayerWall.ICE.getSprite().getSprite() : PlayerWall.BRICK.getSprite().getSprite()));
+        JToggleButton toggleButton = new JToggleButton(new ImageIcon(hasEnoughIceWalls ? PlayerWall.ICE.getSprite().getSprite() : PlayerWall.BRICK.getSprite().getSprite()));
         toggleButton.addItemListener(new OnWallActionListener(columnIndex));
         toggleButton.setOpaque(false);
         return toggleButton;
     }
 
-    private JButton createPlayButton(Player player) {
-        JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "play2.jpg")));
+    private JToggleButton createPlayButton() {
+        JToggleButton button = new JToggleButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "play2.jpg")));
         button.setOpaque(false);
-        //TODO: button.addActionListener(e -> player.executeProgram());
+        button.addActionListener(e -> Game.getPlayers()[numPlayer].executeProgram());
         return button;
     }
 
-    private JButton createDitchButton(Player player) {
+    private JButton createDitchButton() {
         JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "defausse.jpg")));
         button.setEnabled(false);
         button.setOpaque(false);
-        //TODO: button.addActionListener(e -> player.ditchCard(index));
+        button.addActionListener(actionEvent -> {
+            int index = findSelectedCardIndex();
+            Game.getPlayers()[numPlayer].ditchCard(index);
+            panel[2][index].setIcon(null);
+            panel[2][index].setSelected(false);
+            panel[2][index].removeItemListener(panel[2][index].getItemListeners()[0]);
+            panel[2][index] = null;
+            toggleHandCards(true);
+        });
         return button;
+    }
+
+    private int findSelectedCardIndex() {
+        int cardIndex = -1;
+        for (int i = 0; i < 5; i++) {
+            if (getPanel()[2][i] != null && getPanel()[2][i].isSelected()) {
+                cardIndex = i;
+            }
+        }
+        return cardIndex;
+    }
+
+    public void afterAction() {
+        for (int i = 0; i < 5; i++) {
+            panel[0][i].setEnabled(false);
+        }
+        panel[1][0].setEnabled(false);
+        panel[1][4].setEnabled(true);
+    }
+
+    private void togglePlayerPanel(boolean enabled) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (panel[i][j] != null) {
+                    panel[i][j].setEnabled(enabled);
+                }
+            }
+        }
+        panel[1][2].setEnabled(false);
+        panel[1][4].setEnabled(false);
+    }
+
+    private void toggleHandCards(boolean enabled) {
+        for (int i = 0; i < 5; i++) {
+            if (panel[2][i] != null) {
+                panel[2][i].setEnabled(enabled);
+            }
+        }
+        panel[1][0].setEnabled(!enabled);
+        panel[1][2].setEnabled(!enabled);
+        panel[1][4].setEnabled(enabled);
     }
 
     private class OnWallActionListener implements ItemListener {
@@ -128,20 +179,16 @@ public final class PlayerBoard {
                 delegate.onWallUnclick(index);
             }
         }
-
-        private void togglePlayerPanel(boolean enabled) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 5; j++) {
-                    panel[i][j].setEnabled(enabled);
-                }
-            }
-        }
     }
 
     private class OnDeckActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-
+            Game.getPlayers()[numPlayer].pickCards();
+            for (int i = 0; i < 5; i++) {
+                panel[2][i] = createHandButton(new ImageIcon(Game.getPlayers()[numPlayer].getHand()[i].getSprite().getSprite()), i);
+            }
+            togglePlayerPanel(true);
             delegate.onPlayerChange();
         }
     }
@@ -149,36 +196,28 @@ public final class PlayerBoard {
     private class OnHandActionListener implements ItemListener {
 
         private int index;
-        private Player player;
 
-        public OnHandActionListener(int index, Player player) {
+        public OnHandActionListener(int index) {
             this.index = index;
-            this.player = player;
         }
 
         @Override
         public void itemStateChanged(ItemEvent itemEvent) {
             if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
                 togglePlayerPanel(false);
-                panel[0][index].setEnabled(true);
+                panel[2][index].setEnabled(true);
                 panel[1][0].setEnabled(true);
-                for (int i = 0; i < 5 ; i++){
-                    if (player.getHand()[i] == null) {
-                        panel[1][2].setEnabled(true);
-                        panel[1][4].setEnabled(true);
-                        i = 5;
-                    }
-                }
-
+                panel[1][2].setEnabled(true);
             } else {
                 togglePlayerPanel(true);
                 panel[1][2].setEnabled(false);
                 panel[1][4].setEnabled(false);
-                for (int i = 0; i < 5 ; i++){
-                    if (player.getHand()[i] == null) {
+                for (int i = 0; i < 5; i++) {
+                    if (Game.getPlayers()[numPlayer].getHand()[i] == null) {
                         togglePlayerPanel(false);
-                        for (int j = 0; j < 5 ; j++){
-                            if (player.getHand()[j] != null) {
+                        panel[1][4].setEnabled(true);
+                        for (int j = 0; j < 5; j++) {
+                            if (Game.getPlayers()[numPlayer].getHand()[j] != null) {
                                 panel[2][j].setEnabled(true);
                             }
                         }
@@ -187,14 +226,5 @@ public final class PlayerBoard {
                 }
             }
         }
-
-        private void togglePlayerPanel(boolean enabled) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 5; j++) {
-                    panel[i][j].setEnabled(enabled);
-                }
-            }
-        }
     }
-
 }
