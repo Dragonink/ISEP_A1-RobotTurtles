@@ -101,7 +101,7 @@ public final class PlayerBoard {
         JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "defausse.jpg")));
         button.setEnabled(false);
         button.setOpaque(false);
-        button.addActionListener(e -> player.ditchCards());
+        //TODO: button.addActionListener(e -> player.ditchCard());
         return button;
     }
 

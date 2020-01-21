@@ -112,7 +112,18 @@ public final class Player {
         //TODO
     }
 
-    public final void ditchCards() {
-        //TODO
+    public final void ditchCard(final int cardIdx) {
+        ditchedCards.add(hand[cardIdx]);
+        hand[cardIdx] = null;
+    }
+
+    public final void pickCards() {
+        for (int c = 0; c < hand.length; c++) if (hand[c].equals(null)) {
+            if (availableCards.empty()) {
+                availableCards.addAll(ditchedCards);
+                ditchedCards.clear();
+            }
+            hand[c] = availableCards.pop();
+        }
     }
 }
