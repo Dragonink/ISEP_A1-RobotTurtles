@@ -6,8 +6,9 @@ import java.awt.*;
 import java.io.IOException;
 
 public class BoardImagePanel extends JPanel {
-    
-    public BoardImagePanel(GridLayout gridLayout) {
+    private static final long serialVersionUID = -5423539471360799507L;
+
+	public BoardImagePanel(GridLayout gridLayout) {
         super(gridLayout);
     }
 

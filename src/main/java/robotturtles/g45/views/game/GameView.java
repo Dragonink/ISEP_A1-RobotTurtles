@@ -1,6 +1,5 @@
 package robotturtles.g45.views.game;
 
-import robotturtles.g45.Board;
 import robotturtles.g45.BoardImagePanel;
 import robotturtles.g45.Game;
 import robotturtles.g45.PlayerBoard;
@@ -17,7 +16,7 @@ public class GameView {
         public void onWallClick(int wallIdx) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    boolean isCellAvailable = board.buildWall(wallIdx, i, j);
+                    boolean isCellAvailable = Game.board.canBuildWall(wallIdx, i, j);
                     boardCells[i][j].setEnabled(isCellAvailable);
                     boardCells[i][j].setOpaque(isCellAvailable);
                 }
@@ -46,7 +45,6 @@ public class GameView {
     private JPanel boardPanel = createBoardPanel();
     private JPanel playerPanel = createPlayerPanel();
     private List<PlayerBoard> playerBoards = createPlayerBoards();
-    private Board board = new Board();
     private JButton[][] boardCells = new JButton[8][8];
     private int activePlayerIndex = 0;
 
@@ -119,8 +117,8 @@ public class GameView {
     private void fillBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (board.getBoard()[i][j].getSprite() != null) {
-                    JButton boardCell = createBoardCell(new ImageIcon(board.getBoard()[i][j].getSprite()));
+                if (Game.board.getSquare(i, j).getSprite() != null) {
+                    JButton boardCell = createBoardCell(new ImageIcon(Game.board.getSquare(i, j).getSprite()));
                     boardCells[i][j] = boardCell;
                     boardPanel.add(boardCell);
                 }
