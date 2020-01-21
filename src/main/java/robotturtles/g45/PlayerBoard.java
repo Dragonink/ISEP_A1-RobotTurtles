@@ -55,7 +55,7 @@ public final class PlayerBoard {
         }
 
         for (int i = 0; i < 5; i++) {
-            panel[2][i] = createHandButton(new ImageIcon(player.getHand()[i].getSprite().getSprite()));
+            panel[2][i] = createHandButton(new ImageIcon(player.getHand()[i].getSprite().getSprite()), i);
         }
     }
 
@@ -69,9 +69,9 @@ public final class PlayerBoard {
         return button;
     }
 
-    private JButton createHandButton(ImageIcon imageIcon) {
+    private JButton createHandButton(ImageIcon imageIcon, int index) {
         JButton button = new JButton(imageIcon);
-        //button.addActionListener(new OnHandActionListener());
+        // TODO : button.addActionListener(new OnHandActionListener()); // mettre en paramétre le joueur et l'index de la carte
         button.setOpaque(false);
         return button;
     }
@@ -94,7 +94,7 @@ public final class PlayerBoard {
     private JButton createPlayButton(Player player) {
         JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "play2.jpg")));
         button.setOpaque(false);
-        button.addActionListener(e -> player.executeProgram());
+        //TODO: button.addActionListener(e -> player.executeProgram());
         return button;
     }
 
@@ -102,7 +102,7 @@ public final class PlayerBoard {
         JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "defausse.jpg")));
         button.setEnabled(false);
         button.setOpaque(false);
-        //TODO: button.addActionListener(e -> player.ditchCard());
+        //TODO: button.addActionListener(e -> player.ditchCard(index));
         return button;
     }
 
@@ -166,15 +166,25 @@ public final class PlayerBoard {
                     if (player.getHand()[i] == null) {
                         panel[1][2].setEnabled(true);
                         panel[1][4].setEnabled(true);
+                        i = 5;
                     }
                 }
-                player.addToProgram(index);
 
             } else {
                 togglePlayerPanel(true);
                 panel[1][2].setEnabled(false);
                 panel[1][4].setEnabled(false);
-                delegate.onWallUnclick(index);
+                for (int i = 0; i < 5 ; i++){
+                    if (player.getHand()[i] == null) {
+                        togglePlayerPanel(false);
+                        for (int j = 0; j < 5 ; j++){
+                            if (player.getHand()[j] != null) {
+                                panel[2][j].setEnabled(true);
+                            }
+                        }
+                        i = 5;
+                    }
+                }
             }
         }
 
