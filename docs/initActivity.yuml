@@ -1,0 +1,16 @@
+// {type:activity}
+// {direction:topDown}
+// {generate:true}
+
+
+(start)-><p1>[P1 Turtle]->(Choose Turtle 1)-><p2>[P2 Turtle]->(Choose Turtle 2)-><p3>[P3 Turtle]->(Choose Turtle 3)-><p4>[P4 Turtle]->(Choose Turtle 4)-><ok>[Start]->(Start game with 4 players)->(end)
+
+<p2>[Cancel]->(Cancel Turtle 1)-><p1>
+
+<p3>[Start]->(Start game with 2 players)->(end)
+<p3>[Cancel]->(Cancel Turtle 2)-><p2>
+
+<p4>[Start]->(Start game with 3 players)->(end)
+<p4>[Cancel]->(Cancel Turtle 3)-><p3>
+
+<ok>[Cancel]->(Cancel Turtle 4)-><p4>
