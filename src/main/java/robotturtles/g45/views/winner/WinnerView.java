@@ -95,7 +95,7 @@ public class WinnerView {
         button.setEnabled(true);
         button.setIcon(new ImageIcon(this.getClass().getResource("/images/play.jpg")));
         button.setPreferredSize(new Dimension(50, 50));
-        button.addActionListener(new onReplayActionListener());
+        button.addActionListener(new OnReplayActionListener());
         return button;
     }
 
@@ -127,7 +127,7 @@ public class WinnerView {
         return buttons;
     }
 
-    private class onReplayActionListener implements ActionListener {
+    private class OnReplayActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             replayDelegate.onReplay();
