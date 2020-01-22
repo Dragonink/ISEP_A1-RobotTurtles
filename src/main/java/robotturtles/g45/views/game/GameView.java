@@ -55,7 +55,6 @@ public class GameView {
                 playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].setIcon(null);
                 playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].setDisabledIcon(null);
                 playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].removeItemListener(playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].getItemListeners()[0]);
-
                 playerBoards.get(activePlayerIndex).afterAction();
 
 
