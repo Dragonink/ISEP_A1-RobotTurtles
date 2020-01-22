@@ -1,10 +1,14 @@
 package robotturtles.g45;
 
 import robotturtles.g45.board.BoardWall;
+import robotturtles.g45.board.Laser;
 import robotturtles.g45.board.Turtle;
 import robotturtles.g45.player.Card;
+import robotturtles.g45.views.game.GameDelegate;
 
+import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Class for players.
@@ -109,7 +113,9 @@ public final class Player {
     /**
      * Executes the player's program.
      */
-    public final void executeProgram(Card card) { //retourner vrai ou faux selon si il reste un joueur et passer au joeur suivant si le joeur a atteint le joyau
+
+/*
+    public final void executeProgram(Card card) {
         if (card.equals(Card.FRONT_ROTATE_LEFT)) turtle.setRotation(turtle.getRotation() - 1);
         else if (card.equals(Card.FRONT_ROTATE_RIGHT)) turtle.setRotation(turtle.getRotation() + 1);
         else if (card.equals(Card.FRONT_FORWARD)) {
@@ -187,7 +193,158 @@ public final class Player {
                 }
             } while (pos[0] > 0 && pos[0] < 7 && pos[1] > 0 && pos[1] < 7 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
         }
+*/
+    public final void executeProgram(GameDelegate gameDelegate) {
+        final SwingWorker<Boolean, Sprite> swingWorker = new SwingWorker<Boolean, Sprite>() {
+
+            @Override
+            protected Boolean doInBackground() throws Exception {
+                for (Card card = program.poll(); card != null; card = program.poll()) {
+                    if (card.equals(Card.FRONT_ROTATE_LEFT)) {
+                        turtle.setRotation(turtle.getRotation() - 1);
+                        this.publish(turtle);
+                        Thread.sleep(2000);
+                    } else if (card.equals(Card.FRONT_ROTATE_RIGHT)) {
+                        turtle.setRotation(turtle.getRotation() + 1);
+                        this.publish(turtle);
+                        Thread.sleep(2000);
+                    } else if (card.equals(Card.FRONT_FORWARD)) {
+                        Integer[] pos = turtle.getPos();
+                        Game.board.getBoard()[pos[0]][pos[1]] = new BoardSprite(null);
+                        switch (turtle.getRotation()) {
+                            case 0:
+                                pos[0]--;
+                                break;
+                            case 1:
+                                pos[1]++;
+                                break;
+                            case 2:
+                                pos[0]++;
+                                break;
+                            case 3:
+                                pos[1]--;
+                                break;
+                        }
+                        if (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8) {
+                            if (Game.board.getSquare(pos[0], pos[1]) == null || Game.board.getSquare(pos[0], pos[1]).isEmpty()) {// Move if square is empty
+                                Game.board.setSquare(pos[0], pos[1], turtle.getSprite());
+                                Game.board.resetSquare(pos[0], pos[1]);
+                                turtle.setPos(pos[0], pos[1]);
+                                this.publish(turtle);
+                                Thread.sleep(2000);
+                            } else if (Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()) || Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.ICE.getSprite())) {
+                                turtle.setRotation(turtle.getRotation() + 2);// Rotate if square is wall
+                                this.publish(turtle);
+                                Thread.sleep(2000);
+                            } else {
+                                for (Integer[] turtleTest : Game.board.getTurtles())
+                                    if (pos[0].equals(turtleTest[0]) && pos[1].equals(turtleTest[1])) {// Reset positions of both turtles
+                                        for (Player player : Game.getPlayers())
+                                            if (player.turtle.getPos()[0].equals(pos[0]) && player.turtle.getPos()[1].equals(pos[1])) {
+                                                player.turtle.reset();
+                                                this.publish(turtle);
+                                                Thread.sleep(2000);
+                                                break;
+                                            }
+                                        turtle.reset();
+                                        this.publish(turtle);
+                                        Thread.sleep(2000);
+                                        break;
+                                    }
+                                for (Integer[] jewel : Game.board.getJewels())
+                                    if (pos[0].equals(jewel[0]) && pos[1].equals(jewel[1])) {// Win if square is jewel
+                                        Game.board.resetSquare(turtle.getPos()[0], turtle.getPos()[1]);
+                                        return true;
+                                    }
+                            }
+                        } else {
+                            turtle.setRotation(turtle.getRotation() + 2);// Rotate if board border
+                            this.publish(turtle);
+                            Thread.sleep(2000);
+                        }
+                    } else if (card.equals(Card.FRONT_LASER)) {
+                        Laser laser = Laser.LASER;
+                        Integer[] pos = turtle.getPos();
+                        int direction = 1;
+                        do {
+                            switch (turtle.getRotation()) {
+                                case 0:
+                                    pos[0] -= direction;
+                                    break;
+                                case 1:
+                                    pos[1] += direction;
+                                    break;
+                                case 2:
+                                    pos[0] += direction;
+                                    break;
+                                case 3:
+                                    pos[1] -= direction;
+                                    break;
+                            }
+                            if (Game.board.getSquare(pos[0], pos[1]) == null || Game.board.getSquare(pos[0], pos[1]).isEmpty()) {
+                                laser.setPos(pos[0], pos[1]);
+                                this.publish(laser);
+                                Thread.sleep(2000);
+                            } else if (Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.ICE.getSprite())) {
+                                Game.board.resetSquare(pos[0], pos[1]);
+                                laser.setPos(pos[0], pos[1]);
+                                this.publish(laser);
+                                Thread.sleep(2000);
+                            } else {
+                                for (Player player : Game.getPlayers())
+                                    if (player.turtle.getPos()[0].equals(pos[0]) && player.turtle.getPos()[1].equals(pos[1])) {
+                                        if (Game.getPlayers().length > 2) {
+                                            player.turtle.reset();
+                                            laser.setPos(pos[0], pos[1]);
+                                            this.publish(laser);
+                                            Thread.sleep(2000);
+                                        } else {
+                                            player.turtle.setRotation(player.turtle.getRotation() + 2);
+                                            this.publish(turtle);
+                                            Thread.sleep(2000);
+                                        }
+                                        break;
+                                    }
+                                for (Integer[] jewel : Game.board.getJewels())
+                                    if (pos[0].equals(jewel[0]) && pos[1].equals(jewel[1])) {
+                                        direction = -direction;
+                                        break;
+                                    }
+                            }
+                        } while (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            protected void process(List<Sprite> chunks) {
+                super.process(chunks);
+                for (Sprite sprite : chunks) {
+                    gameDelegate.onActionDone(sprite);
+                }
+            }
+
+            @Override
+            protected void done() {
+                super.done();
+
+                try {
+                    if (get()) {
+                        gameDelegate.onPlayerSuccess();
+                    } else {
+                        System.out.print("Fin du programme");
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        swingWorker.execute();
     }
+
 
     public final void ditchCard(final int cardIdx) {
         ditchedCards.add(hand[cardIdx]);

@@ -8,10 +8,10 @@ import robotturtles.g45.Sprite;
 import javax.swing.*;
 import java.awt.*;
 
-public enum Turtle {
+public enum Turtle implements Sprite {
     BEEP("beepTileS.jpg","beepTileN.jpg","beepTileE.jpg","beepTileW.jpg",Color.BLUE, Sprite.SPRITE_PATH+"choixBeep.jpg"),
     PANGLE("pangleTileS.jpg","pangleTileN.jpg","pangleTileE.jpg","pangleTileW.jpg", Color.ORANGE, Sprite.SPRITE_PATH + "choixPangle.jpg"),
-    PI("piTileS.jpg","pangleTileN.jpg","pangleTileE.jpg","pangleTileW.jpg",Color.RED,Sprite.SPRITE_PATH+"choixPi.jpg"),
+    PI("piTileS.jpg", "piTileN.jpg", "piTileE.jpg", "piTileW.jpg", Color.RED, Sprite.SPRITE_PATH + "choixPi.jpg"),
     DOT("dotTileS.jpg","dotTileN.jpg","dotTileE.jpg","dotTileW.jpg",Color.MAGENTA,Sprite.SPRITE_PATH+"choixDot.jpg");
 
     private final Color color;

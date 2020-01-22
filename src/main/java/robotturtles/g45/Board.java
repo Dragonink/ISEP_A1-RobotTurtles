@@ -47,7 +47,7 @@ public final class Board {
      * Constructs a new {@code Board}.
      */
     public Board() {
-        for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) board[i][j] = new BoardSprite("");
+        for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) board[i][j] = new BoardSprite(null);
         switch (Game.getPlayers().length) {
             case 2:
                 board[0][1] = Game.getPlayers()[0].turtle.getSpriteS();

@@ -3,6 +3,7 @@ package robotturtles.g45.views.game;
 import robotturtles.g45.BoardImagePanel;
 import robotturtles.g45.Game;
 import robotturtles.g45.PlayerBoard;
+import robotturtles.g45.Sprite;
 import robotturtles.g45.board.BoardWall;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class GameView {
 
-    private final GameDelegate gameDelegate = new GameDelegate() {
+    public final GameDelegate gameDelegate = new GameDelegate() {
         @Override
         public void onWallClick(int wallIdx) {
             for (int i = 0; i < 8; i++) {
@@ -63,6 +64,24 @@ public class GameView {
         public void onPlayerChange() {
             changeActivePlayer();
         }
+
+        @Override
+        public void onActionDone(Sprite sprite) {
+            Game.board.getBoard()[sprite.getPos()[0]][sprite.getPos()[1]] = sprite.getSprite();
+            boardPanel.removeAll();
+            fillBoard();
+            boardPanel.revalidate();
+            boardPanel.repaint();
+        }
+
+        @Override
+        public void onPlayerSuccess() {
+            Game.playerWins(Game.getPlayers()[activePlayerIndex]);
+            if (Game.getPlayers().length > 1) {
+                playerBoards.remove(activePlayerIndex);
+                this.onPlayerChange();
+            }
+        }
     };
     private JPanel rootPanel = createRootPanel();
     private JPanel infoPlayerPanel = createInfoPlayerPanel();
@@ -86,7 +105,7 @@ public class GameView {
     }
 
     private String numPlayer() {
-        return String.format("Joueur %s : %s", activePlayerIndex + 1, (Game.getPlayers()[activePlayerIndex].turtle.name()));
+        return String.format("%s", (Game.getPlayers()[activePlayerIndex].turtle.name()));
     }
 
     private void drawGameView() {

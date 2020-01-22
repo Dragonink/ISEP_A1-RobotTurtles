@@ -3,6 +3,7 @@ package robotturtles.g45;
 import robotturtles.g45.player.Card;
 import robotturtles.g45.player.PlayerWall;
 import robotturtles.g45.views.game.GameDelegate;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -164,10 +165,7 @@ public final class PlayerBoard {
             int index = findSelectedCardIndex();
 
             if (index == -1) {
-                for (Card card = Game.getPlayers()[numPlayer].getProgram().poll(); card != null; card = Game.getPlayers()[numPlayer].getProgram().poll()) {
-                    Game.getPlayers()[numPlayer].executeProgram(card);
-                    Game.board.getBoard(); // enlever les éléments de l'ancien affichage et mettre l'affichage avec le nouveau plateau
-                }
+                Game.getPlayers()[numPlayer].executeProgram(delegate);
                 hasDoneAction = true;
             } else {
                 Game.getPlayers()[numPlayer].addToProgram(index);
