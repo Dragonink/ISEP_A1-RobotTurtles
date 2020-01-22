@@ -53,7 +53,7 @@ final class TraversableBoard<T> {
      * @return Object at the given square.
      * @throws IllegalArgumentException if {@code square} is invalid.
      */
-    Object getSquare(final int[] square) throws IllegalArgumentException {
+    T getSquare(final int[] square) throws IllegalArgumentException {
         if (!checkSquare(square)) throw new IllegalArgumentException("'square' is invalid.");
         else return board[square[0]][square[1]];
     }
@@ -63,7 +63,7 @@ final class TraversableBoard<T> {
      * @return Object at the given square.
      * @throws IllegalArgumentException if {@code square} is invalid.
      */
-    Object getSquare(final Integer[] square) throws IllegalArgumentException {
+    T getSquare(final Integer[] square) throws IllegalArgumentException {
         return getSquare(new int[] {square[0], square[1]});
     }
 
