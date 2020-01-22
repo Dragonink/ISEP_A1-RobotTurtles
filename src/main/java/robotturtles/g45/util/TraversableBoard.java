@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Utility class for prepare a {@link robotturtles.g45.Board Board} for {@link PathFinder}. */
-final class TraversableBoard {
+final class TraversableBoard<T> {
     /** Board used to compute a path. */
-    private final Object[][] board;
+    private final T[][] board;
 
     /** List of objects that cannot be crossed on the board. */
-    private final List<Object> obstacles;
+    private final List<T> obstacles;
     /** Gets a list of obstacles on the board.
      * 
      * @return List of objects that cannot be crossed on the board.
      */
-    public final List<Object> getObstacles() {
+    public final List<T> getObstacles() {
         return obstacles;
     }
 
@@ -24,7 +24,7 @@ final class TraversableBoard {
      * @param board Board used to compute a path.
      * @param obstacles List of objects that cannot be crossed on the board.
      */
-    TraversableBoard(final Object[][] board, final List<Object> obstacles) {
+    TraversableBoard(final T[][] board, final List<T> obstacles) {
         this.board = board;
         this.obstacles = obstacles;
     }

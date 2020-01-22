@@ -183,7 +183,7 @@ public final class Player {
                             break;
                         }
                     }
-                } while (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
+                } while (pos[0] > 0 && pos[0] < 7 && pos[1] > 0 && pos[1] < 7 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
             }
         }
     }

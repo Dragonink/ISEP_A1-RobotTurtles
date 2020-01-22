@@ -111,7 +111,7 @@ public final class Board {
      * @return {@code true} if the sprite has been set; {@code false} otherwise.
      */
     public final boolean setSquare(final int line, final int column, final BoardSprite sprite) {
-        if (!(getSquare(line, column).getSprite() instanceof BufferedImage)) return false;
+        if (getSquare(line, column) != null && !getSquare(line, column).isEmpty()) return false;
         else board[line][column] = sprite;
         return true;
     }
@@ -151,7 +151,7 @@ public final class Board {
      * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
      */
     public final boolean existsPath(final int[] from, final int[] to) throws IllegalArgumentException {
-        return new PathFinder(board, Arrays.asList(new Object[]{BoardWall.BRICK, BoardWall.VOID}), from, to).exists();
+        return new PathFinder<BoardSprite>(board, Arrays.asList(new BoardSprite[]{BoardWall.BRICK.getSprite()}), from, to).exists();
     }
 
     /**
@@ -179,10 +179,8 @@ public final class Board {
      * @return {@code true} if the wall can be build; {@code false} otherwise.
      */
     public boolean canBuildWall(final int wallIdx, final int line, final int column) {
-        return getSquare(line, column).isEmpty();
-       /* if (!getSquare(line, column).equals(null) && !getSquare(line, column).isEmpty()) return false;
-        else if (wallIdx >= 2) {
-            setSquare(line, column, BoardWall.BRICK.getSprite());
+        if (getSquare(line, column) != null && !getSquare(line, column).isEmpty()) return false;
+        if (wallIdx >= 2 && setSquare(line, column, BoardWall.BRICK.getSprite())) {
             boolean blocked = false;
             for (Integer[] turtle : getBlockingPos()) for (Integer[] jewel : jewels) {
                 if (blocked) break;
@@ -190,6 +188,7 @@ public final class Board {
             }
             resetSquare(line, column);
             return !blocked;
-        } else return true;*/
+        }
+        return true;
     }
 }
