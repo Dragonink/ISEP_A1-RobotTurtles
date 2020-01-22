@@ -5,7 +5,7 @@ import robotturtles.g45.board.Jewel;
 import robotturtles.g45.util.PathFinder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public final class Board {
      */
     private final BoardSprite[][] board = new BoardSprite[8][8];
 
-    public final List<Integer[]> getTurtles() {
+    final List<Integer[]> getTurtles() {
         List<Integer[]> turtles = new ArrayList<Integer[]>();
         for (Player player : Game.getPlayers()) turtles.add(player.turtle.getPos());
         return turtles;
@@ -28,7 +28,7 @@ public final class Board {
      */
     private final List<Integer[]> startPoints = new ArrayList<Integer[]>(4);
 
-    private final List<Integer[]> getBlockingPos() {
+    private List<Integer[]> getBlockingPos() {
         List<Integer[]> blockingPos = new ArrayList<Integer[]>(startPoints);
         for (Player player : Game.getPlayers()) blockingPos.add(player.turtle.getPos());
         return blockingPos;
@@ -39,7 +39,7 @@ public final class Board {
      */
     private final List<Integer[]> jewels = new ArrayList<Integer[]>(3);
 
-    public final List<Integer[]> getJewels() {
+    final List<Integer[]> getJewels() {
         return jewels;
     }
 
@@ -122,7 +122,7 @@ public final class Board {
      * @param column Column index.
      */
     public final void resetSquare(final int line, final int column) {
-        board[line][column] = null;
+        board[line][column] = new BoardSprite(null);
     }
 
     /**
@@ -133,8 +133,8 @@ public final class Board {
      * @return {@code true} if the path exists; {@code false} otherwise.
      * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
      */
-    public final boolean existsPath(final int[] from, final int[] to) throws IllegalArgumentException {
-        return new PathFinder<BoardSprite>(board, Arrays.asList(new BoardSprite[]{BoardWall.BRICK.getSprite()}), from, to).exists();
+    private boolean existsPath(final int[] from, final int[] to) throws IllegalArgumentException {
+        return new PathFinder<>(board, Collections.singletonList(BoardWall.BRICK.getSprite()), from, to).exists();
     }
 
     /**
@@ -145,7 +145,7 @@ public final class Board {
      * @return {@code true} if the path exists; {@code false} otherwise.
      * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
      */
-    public final boolean existsPath(final Integer[] from, final Integer[] to) throws IllegalArgumentException {
+    private boolean existsPath(final Integer[] from, final Integer[] to) throws IllegalArgumentException {
         return existsPath(new int[]{from[0], from[1]}, new int[]{to[0], to[1]});
     }
 

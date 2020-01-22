@@ -5,14 +5,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.event.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import robotturtles.g45.BackgroundImagePanel;
+import robotturtles.g45.Player;
 
 public class WinnerView {
     private final BackgroundImagePanel rootPanel = createRootPanel();
@@ -20,22 +25,23 @@ public class WinnerView {
     private final JPanel messagePanel = createMessagePanel();
     private JLabel messageLabel = createMessageLabel();
     private final JPanel cardsPanel = createCardsPanel();
-    //private final List<JLabel> cardsLabel = createCardsLabel();
     private final JPanel buttonsPanel = createButtonsPanel();
     private JButton playButton = createPlayButton();
+    private ReplayDelegate replayDelegate;
 
     private void drawWinnerView() {
         rootPanel.add(winnerPanel);
-        winnerPanel.add(messagePanel, BorderLayout.CENTER);
+        winnerPanel.add(messagePanel, BorderLayout.NORTH);
         messagePanel.add(messageLabel);
         winnerPanel.add(cardsPanel, BorderLayout.CENTER);
-        //cardsPanel.add(cardsLabel);
         winnerPanel.add(buttonsPanel, BorderLayout.SOUTH);
         buttonsPanel.add(playButton);
     }
 
-    public WinnerView(){
+    public WinnerView(List<Player> winners, ReplayDelegate replayDelegate) {
         drawWinnerView();
+        fillWinners(createCardButtons(winners));
+        this.replayDelegate = replayDelegate;
     }
 
     private BackgroundImagePanel createRootPanel() {
@@ -44,7 +50,9 @@ public class WinnerView {
         return panel;
     }
 
-    public BackgroundImagePanel getRootPanel() { return rootPanel;}
+    public BackgroundImagePanel getRootPanel() {
+        return rootPanel;
+    }
 
     private JPanel createWinnerPanel() {
         JPanel panel = new JPanel();
@@ -55,21 +63,18 @@ public class WinnerView {
 
     private JPanel createMessagePanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(Color.RED);
         panel.setOpaque(false);
         return panel;
     }
 
     private JLabel createMessageLabel() {
-        JLabel label = new JLabel(message(), JLabel.CENTER);
+        JLabel label = new JLabel("Voici le classement final !!!", JLabel.CENTER);
         label.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 5));
         label.setFont(new Font("Serif", Font.PLAIN, 40));
         label.setBackground(Color.WHITE);
         label.setForeground(Color.BLACK);
         return label;
-    }
-
-    private String message() {
-        return String.format("Voici le classement final !!!");
     }
 
     private JPanel createCardsPanel() {
@@ -90,8 +95,42 @@ public class WinnerView {
         button.setEnabled(true);
         button.setIcon(new ImageIcon(this.getClass().getResource("/images/play.jpg")));
         button.setPreferredSize(new Dimension(50, 50));
-        //button.addActionListener(new ChoosePlayerView.OnPlayActionListener());
+        button.addActionListener(new onReplayActionListener());
         return button;
     }
 
+    private void fillWinners(List<JButton> cards) {
+        cardsPanel.removeAll();
+        cards.forEach(cardsPanel::add);
+    }
+
+    private List<JButton> createCardButtons(List<Player> winners) {
+        List<JButton> buttons = winners.stream().map(player -> {
+            JButton card = new JButton(player.turtle.name());
+            card.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            card.setIcon(player.turtle.getPlayerChooseIcon());
+            card.setDisabledIcon(player.turtle.getPlayerChooseIcon());
+            card.setVerticalTextPosition(SwingConstants.BOTTOM);
+            card.setHorizontalTextPosition(SwingConstants.CENTER);
+            card.setFont(new Font("Serif", Font.BOLD, 25));
+            card.setForeground(player.turtle.getColor());
+            card.setEnabled(false);
+            card.setLayout(new GridBagLayout());
+            card.setPreferredSize(new Dimension(card.getIcon().getIconWidth(), card.getIcon().getIconHeight() + 70));
+            return card;
+        }).collect(Collectors.toList());
+
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).setText(buttons.get(i).getText() + String.format(" -> %d", i + 1));
+        }
+
+        return buttons;
+    }
+
+    private class onReplayActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            replayDelegate.onReplay();
+        }
+    }
 }

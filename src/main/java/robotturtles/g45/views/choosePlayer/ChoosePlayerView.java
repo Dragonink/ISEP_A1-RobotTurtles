@@ -100,7 +100,6 @@ public class ChoosePlayerView {
         return panel;
     }
 
-
     private JPanel createButtonsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(2, 2));

@@ -52,7 +52,7 @@ public final class Game {
      */
     private static final List<Player> winners = new ArrayList<Player>(3);
     public static final void playerWins(Player player) {
-        if (players.remove(player)) winners.add(player);
+        winners.add(player);
     }
 
     /**
@@ -91,13 +91,13 @@ public final class Game {
      * Draws the game window.
      */
     private static void drawGameView() {
-        GameView gameView = new GameView();
+        GameView gameView = new GameView(() -> draw(GameState.WINNER));
         window.add(gameView.getRootPanel());
     }
 
     private static void drawWinnerView(){
-        WinnerView winnerView = new WinnerView();
-        //window.add(winnerView.getRootPanel);
+        WinnerView winnerView = new WinnerView(Game.winners, () -> draw(GameState.CHOOSEPLAYER));
+        window.add(winnerView.getRootPanel());
     }
 
     private static void draw(final GameState state) {

@@ -1,21 +1,20 @@
 package robotturtles.g45.views.game;
 
-import robotturtles.g45.BoardImagePanel;
-import robotturtles.g45.Game;
-import robotturtles.g45.PlayerBoard;
-import robotturtles.g45.Sprite;
+import robotturtles.g45.*;
 import robotturtles.g45.board.BoardWall;
+import robotturtles.g45.views.winner.WinnerDelegate;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameView {
 
-    public final GameDelegate gameDelegate = new GameDelegate() {
+    private final GameDelegate gameDelegate = new GameDelegate() {
         @Override
         public void onWallClick(int wallIdx) {
             for (int i = 0; i < 8; i++) {
@@ -77,9 +76,15 @@ public class GameView {
         @Override
         public void onPlayerSuccess() {
             Game.playerWins(Game.getPlayers()[activePlayerIndex]);
-            if (Game.getPlayers().length > 1) {
-                playerBoards.remove(activePlayerIndex);
+            if (Game.getWinners().length < Game.getPlayers().length - 1) {
                 this.onPlayerChange();
+            } else {
+                for (Player player : Game.getPlayers()) {
+                    if (Arrays.stream(Game.getWinners()).noneMatch(winner -> winner.turtle.name().equals(player.turtle.name()))) {
+                        Game.playerWins(player);
+                    }
+                }
+                winnerDelegate.onGameOver();
             }
         }
     };
@@ -92,12 +97,14 @@ public class GameView {
     private List<PlayerBoard> playerBoards = createPlayerBoards();
     private JButton[][] boardCells = new JButton[8][8];
     private int activePlayerIndex = 0;
+    private WinnerDelegate winnerDelegate;
 
-    public GameView() {
+    public GameView(WinnerDelegate winnerDelegate) {
         drawGameView();
         setupUIForPlayer();
         fillBoard();
         fillPlayerPanel();
+        this.winnerDelegate = winnerDelegate;
     }
 
     public JPanel getRootPanel() {
@@ -105,7 +112,7 @@ public class GameView {
     }
 
     private String numPlayer() {
-        return String.format("%s", (Game.getPlayers()[activePlayerIndex].turtle.name()));
+        return String.format("Joueur %s : %s", (activePlayerIndex + 1), (Game.getPlayers()[activePlayerIndex].turtle.name()));
     }
 
     private void drawGameView() {
@@ -200,9 +207,13 @@ public class GameView {
     }
 
     private void setupUIForPlayer() {
-        rootPanel.setBackground(Game.getPlayers()[activePlayerIndex].turtle.getColor());
-        infoPlayerLabel.setText(numPlayer());
-        fillPlayerPanel();
+        if (Arrays.stream(Game.getWinners()).noneMatch(player -> Game.getPlayers()[activePlayerIndex].turtle.name().equals(player.turtle.name()))) {
+            rootPanel.setBackground(Game.getPlayers()[activePlayerIndex].turtle.getColor());
+            infoPlayerLabel.setText(numPlayer());
+            fillPlayerPanel();
+        } else {
+            changeActivePlayer();
+        }
     }
 
     private class OnBoardCellActionListener implements ActionListener {
