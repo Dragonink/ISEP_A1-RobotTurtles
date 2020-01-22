@@ -121,6 +121,6 @@ public final class Game {
      * @param args
      */
     public static void main(String[] args) {
-        draw(GameState.WINNER);
+        draw(GameState.CHOOSEPLAYER);
     }
 }
