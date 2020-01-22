@@ -3,8 +3,6 @@ package robotturtles.g45;
 import robotturtles.g45.player.Card;
 import robotturtles.g45.player.PlayerWall;
 import robotturtles.g45.views.game.GameDelegate;
-import robotturtles.g45.views.game.GameView;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
