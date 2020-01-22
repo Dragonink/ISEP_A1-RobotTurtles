@@ -4,7 +4,6 @@ import robotturtles.g45.board.BoardWall;
 import robotturtles.g45.board.Jewel;
 import robotturtles.g45.util.PathFinder;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -124,22 +123,6 @@ public final class Board {
      */
     public final void resetSquare(final int line, final int column) {
         board[line][column] = null;
-    }
-
-    /**
-     * Gets the neighboring sprites of a square.
-     *
-     * @param line   Line index.
-     * @param column Column index.
-     * @return Array {@code [N,E,S,W]} of the neighboring sprites.
-     */
-    public final BoardSprite[] getNeighbors(final int line, final int column) {
-        final BoardSprite[] neighbors = new BoardSprite[4];
-        neighbors[0] = (line - 1 >= 0) ? getSquare(line - 1, column) : BoardWall.VOID.getSprite();
-        neighbors[1] = (column + 1 < 8) ? getSquare(line, column + 1) : BoardWall.VOID.getSprite();
-        neighbors[2] = (line + 1 < 8) ? getSquare(line + 1, column) : BoardWall.VOID.getSprite();
-        neighbors[3] = (line - 1 >= 0) ? getSquare(line, column - 1) : BoardWall.VOID.getSprite();
-        return neighbors;
     }
 
     /**
