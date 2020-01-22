@@ -1,13 +1,18 @@
 package robotturtles.g45.views.winner;
 
-import robotturtles.g45.BackgroundImagePanel;
-import robotturtles.g45.Game;
-import robotturtles.g45.Player;
-import robotturtles.g45.board.Turtle;
-import robotturtles.g45.views.choosePlayer.ChoosePlayerView;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import robotturtles.g45.BackgroundImagePanel;
 
 public class WinnerView {
     private final BackgroundImagePanel rootPanel = createRootPanel();

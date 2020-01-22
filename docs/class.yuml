@@ -33,16 +33,16 @@
 [JToggleButton{bg:blue}]
 
 // Main package
-[Game|+board:Board;+panel:PlayerBoard;-players:List<Player>;-winners:List<Player>;-window:JFrame;;~GameState|+main(String*):void;;+getPlayers():Player*;+getWinners():Player*;+playerWins(Player):void;-createMainWindow():JFrame;-draw(GameState):void;-drawChoosePlayerView():void;-drawGameView():void{bg:white}]
+[Game|+board:Board;+panel:PlayerBoard;-players:List<Player>;-winners:List<Player>;-window:JFrame;;~GameState|+main(String*):void;;+getPlayers():Player*;+getWinners():Player*;+playerWins(Player):void;-createMainWindow():JFrame;-draw(GameState):void;-drawChoosePlayerView():void;-drawGameView():void;-drawWinnerView():void{bg:white}]
 [JFrame]1-++[Game]
 
-[<<enum>>;GameState|CHOOSEPLAYER;PLAYING{bg:white}]
+[<<enum>>;GameState|CHOOSEPLAYER;PLAYING;WINNER{bg:white}]
 [Game]<-.-nested[<<enum>>;GameState]
 
 [Board|-board:BoardSprite**;-jewels:List<Integer*>;-startPoints:List<Integer*>|+getBoard():BoardSprite**;+getJewels():List<Integer*>;-getBlockingPos():List<Integer*>;+getTurtles():List<Integer*>;+getSquare(int,int):BoardSprite;+setSquare(int,int,BoardSprite):boolean;+resetSquare(int,int):void;+existsPath(int*,int*):boolean;+existsPath(Integer*,Integer*):boolean;+canBuildWall(int,int,int):boolean{bg:white}]
 [Game]++-1[Board]
 
-[BoardSprite|-sprite:String|+getSprite():Image;+isEmpty():boolean{bg:white}]
+[BoardSprite|-sprite:String;-color:Color|+getSprite():Image;+isEmpty():boolean{bg:white}]
 [Board]++-[BoardSprite]
 
 [Player|-availableCards:Stack<Card>;-brickWalls:int;-ditchedCards:List<Card>;-hand:Card*;-iceWalls:int;-program:Queue<Card>;+Turtle turtle|+getAvailableCards():Stack<Card>;+getBrickWalls():int;+getDitchedCards():List<Card>;+getHand():Card*;+getIceWalls():int;+getProgram():Queue<Card>;+addToProgram(int):void;+executeProgram():void;+ditchCard(int):void;+pickCards():void{bg:white}]
@@ -54,13 +54,16 @@
 [Player]++-37[<<enum>>;Card]
 [PlayerSprite]1-++[<<enum>>;Card]
 
+[<<interface>>;Sprite|+SPRITE_PATH:String|getPos():Integer*;getSprite():BoardSprite{bg:white}]
+
 [<<enum>>;Turtle|BEEP;PANGLE;PI;DOT;;-color:Color;-playerChooseIcon:ImageIcon;-posI:int;-posJ:int;-rotation:int;-spriteE:BoardSprite;-spriteN:BoardSprite;-spriteS:BoardSprite;-spriteW:BoardSprite;-startPosI:int;-startPosJ:int|+getColor():Color;+getPlayerChooseIcon():ImageIcon;+getPos():Integer*;+getRotation():int;+getSprite():BoardSprite;+getStartPos():Integer*;+setPos(int,int):void;+setRotation(int):void;+setStartPos(int,int):void;+reset():void{bg:white}]
+[<<interface>>;Sprite]<-implements[<<enum>>;Turtle]
 [BoardSprite]4-++[<<enum>>;Turtle]
 [Player]+-[<<enum>>;Turtle]
 [Color]1-++[<<enum>>;Turtle]
 [ImageIcon]1-++[<<enum>>;Turtle]
 
-[<<interface>>;GameDelegate||onBoardCellClick(int,int):void;onPlayerChange():void;onWallClick(int):void;onWallUnclick(int):void{bg:white}]
+[<<interface>>;GameDelegate||onActionDone(Sprite):void;onBoardCellClick(int,int):void;onPlayerChange():void;onPlayerSuccess():void;onWallClick(int):void;onWallUnclick(int):void{bg:white}]
 
 [PlayerBoard|-delegate:GameDelegate;-ditchButton:JButton;-hasDoneAction:boolean;-numPlayer:int;-panel:AbstractButton**;-playButton:JButton;;-OnDeckActionListener;-OnHandActionListener;-OnPlayActionListener;-OnWallActionListener|+getPanel():AbstractButton**;+afterAction():void;-createDeckButton():JButton;-createDitchButton():JButton;-createEmptyButton():JButton;-createHandButton(ImageIcon,int):JToggleButton;-createPlayButton():JButton;-createWallButton(boolean,int):JToggleButton;-findSelectedCardIndex():int;-toggleHandCards(boolean):void;-togglePlayerPanel(boolean):void{bg:white}]
 [Game]++-1[PlayerBoard]
@@ -89,7 +92,7 @@
 [BoardImagePanel||#paintComponent(Graphics){bg:white}]
 [JPanel]^[BoardImagePanel]
 
-[<<interface>>;Sprite|+SPRITE_PATH:String{bg:white}]
+[<<enum>>;Laser|LASER;;-posI:int;-posJ:int|+getPos():Integer*;+getSprite():BoardSprite;+setPos(int,int):void{bg:white}]
 
 [<<enum>>;BoardWall|BRICK;ICE;VOID;;-sprite:BoardSprite|+getSprite():BoardSprite{bg:white}]
 [BoardSprite]1-++[<<enum>>;BoardWall]
@@ -100,7 +103,7 @@
 [<<enum>>;PlayerWall|BRICK;ICE;;-sprite:PlayerSprite|+getSprite():PlayerSprite{bg:white}]
 [PlayerSprite]1-++[<<enum>>;PlayerWall]
 
-[GameView|-activePlayerIndex:int;-boardCells:JButton**;-boardPanel:JPanel;-gameDelegate:GameDelegate;-gamePanel:JPanel;-infoPlayerLabel:JLabel;-infoPlayerPanel:JPanel;-playerBoards:List<PlayerBoard>;-playerPanel:JPanel;-rootPanel:JPanel;;-OnBoardCellActionListener|+getRootPanel():JPanel;-changeActivePlayer():void;createBoardCell(ImageIcon,int,int):JButton;createBoardPanel():JPanel;-createGamePanel():JPanel;-createInfoPlayerLabel():JLabel;-createInfoPlayerPanel():JLabel;-createPlayerBoards():List<PlayerBoard>;-createPlayerPanel():JPanel;-createRootPanel():JPanel;-drawGameView():void;-fillBoard():void;-fillPlayerPanel():void;-numPlayer():String;-setupUIForPlayers():void{bg:white}]
+[GameView|-activePlayerIndex:int;-boardCells:JButton**;-boardPanel:JPanel;+gameDelegate:GameDelegate;-gamePanel:JPanel;-infoPlayerLabel:JLabel;-infoPlayerPanel:JPanel;-playerBoards:List<PlayerBoard>;-playerPanel:JPanel;-rootPanel:JPanel;;-OnBoardCellActionListener|+getRootPanel():JPanel;-changeActivePlayer():void;createBoardCell(ImageIcon,int,int):JButton;createBoardPanel():JPanel;-createGamePanel():JPanel;-createInfoPlayerLabel():JLabel;-createInfoPlayerPanel():JLabel;-createPlayerBoards():List<PlayerBoard>;-createPlayerPanel():JPanel;-createRootPanel():JPanel;-drawGameView():void;-fillBoard():void;-fillPlayerPanel():void;-numPlayer():String;-setupUIForPlayers():void{bg:white}]
 [JButton]8-++[GameView]
 [JLabel]1-++[GameView]
 [JPanel]5-++[GameView]
@@ -134,3 +137,8 @@
 
 [PathFinder<T>|-board:TraversableBoard<T>;-crossed:List<Integer*>;-from:int*;-to:int*|+exists():boolean;-isCrossed(Integer*):boolean;-traverse(int*,int*):boolean{bg:white}]
 [TraversableBoard<T>]1-++[PathFinder<T>]
+
+[<<interface>>;WinnerDelegate{bg:white}]
+
+[WinnerView{bg:white}]
+[<<interface>>;WinnerDelegate]1-++[WinnerView]

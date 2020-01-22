@@ -71,3 +71,9 @@
 [PathFinder<T>]
 [TraversableBoard<T>]1-++[PathFinder<T>]
 [Board]<->[PathFinder<T>]
+
+[<<interface>>;WinnerDelegate]
+
+[WinnerView]
+[<<interface>>;WinnerDelegate]1-++[WinnerView]
+[Game]<->[WinnerView]
