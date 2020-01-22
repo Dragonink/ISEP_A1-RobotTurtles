@@ -179,8 +179,8 @@ public final class Board {
      * @return {@code true} if the wall can be build; {@code false} otherwise.
      */
     public boolean canBuildWall(final int wallIdx, final int line, final int column) {
-        return getSquare(line, column).isEmpty();
-       /* if (!getSquare(line, column).equals(null) && !getSquare(line, column).isEmpty()) return false;
+        //return getSquare(line, column).isEmpty();
+        if (getSquare(line, column) != null && !getSquare(line, column).isEmpty()) return false;
         else if (wallIdx >= 2) {
             setSquare(line, column, BoardWall.BRICK.getSprite());
             boolean blocked = false;
@@ -190,6 +190,6 @@ public final class Board {
             }
             resetSquare(line, column);
             return !blocked;
-        } else return true;*/
+        } else return true;
     }
 }

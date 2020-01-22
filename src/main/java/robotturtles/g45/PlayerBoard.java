@@ -18,10 +18,11 @@ public final class PlayerBoard {
      * Matrix containing the sprites.
      */
     private final AbstractButton[][] panel = new AbstractButton[3][5];
-    private final JToggleButton playButton;
+    private final JButton playButton;
     private final JButton ditchButton;
     private final int numPlayer;
     private final GameDelegate delegate;
+    private boolean hasDoneAction = false;
 
 
     public PlayerBoard(Player player, GameDelegate delegate, int numPlayer) {
@@ -93,10 +94,10 @@ public final class PlayerBoard {
         return toggleButton;
     }
 
-    private JToggleButton createPlayButton() {
-        JToggleButton button = new JToggleButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "play2.jpg")));
+    private JButton createPlayButton() {
+        JButton button = new JButton(new ImageIcon(this.getClass().getResource(Sprite.SPRITE_PATH + "play2.jpg")));
         button.setOpaque(false);
-        button.addActionListener(e -> Game.getPlayers()[numPlayer].executeProgram());
+        button.addActionListener(new OnPlayActionListener());
         return button;
     }
 
@@ -132,6 +133,7 @@ public final class PlayerBoard {
         }
         panel[1][0].setEnabled(false);
         panel[1][4].setEnabled(true);
+        hasDoneAction = true;
     }
 
     private void togglePlayerPanel(boolean enabled) {
@@ -157,6 +159,25 @@ public final class PlayerBoard {
         panel[1][4].setEnabled(enabled);
     }
 
+    private class OnPlayActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            int index = findSelectedCardIndex();
+
+            if (index == -1) {
+                Game.getPlayers()[numPlayer].executeProgram();
+                hasDoneAction = true;
+            } else {
+                Game.getPlayers()[numPlayer].addToProgram(index);
+                panel[2][index].setIcon(null);
+                panel[2][index].setSelected(false);
+                panel[2][index].removeItemListener(panel[2][index].getItemListeners()[0]);
+                panel[2][index] = null;
+                toggleHandCards(true);
+            }
+        }
+    }
+
     private class OnWallActionListener implements ItemListener {
 
         private int index;
@@ -171,7 +192,6 @@ public final class PlayerBoard {
                 togglePlayerPanel(false);
                 panel[0][index].setEnabled(true);
                 delegate.onWallClick(index);
-
             } else {
                 togglePlayerPanel(true);
                 panel[1][2].setEnabled(false);
@@ -189,6 +209,7 @@ public final class PlayerBoard {
                 panel[2][i] = createHandButton(new ImageIcon(Game.getPlayers()[numPlayer].getHand()[i].getSprite().getSprite()), i);
             }
             togglePlayerPanel(true);
+            hasDoneAction = false;
             delegate.onPlayerChange();
         }
     }
@@ -206,7 +227,7 @@ public final class PlayerBoard {
             if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
                 togglePlayerPanel(false);
                 panel[2][index].setEnabled(true);
-                panel[1][0].setEnabled(true);
+                panel[1][0].setEnabled(!hasDoneAction);
                 panel[1][2].setEnabled(true);
             } else {
                 togglePlayerPanel(true);
