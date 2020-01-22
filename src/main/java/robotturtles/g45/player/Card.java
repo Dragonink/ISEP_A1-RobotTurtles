@@ -17,7 +17,7 @@ public enum Card {
         return sprite;
     }
 
-    private Card(String spriteName ){
+    Card(String spriteName) {
         sprite = new PlayerSprite(spriteName);
     }
 }

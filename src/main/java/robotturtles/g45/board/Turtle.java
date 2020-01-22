@@ -28,6 +28,7 @@ public enum Turtle {
     public final void setStartPos(int i, int j) {
         startPosI = i;
         startPosJ = j;
+        setPos(i,j);
     }
     private int posI;
     private int posJ;

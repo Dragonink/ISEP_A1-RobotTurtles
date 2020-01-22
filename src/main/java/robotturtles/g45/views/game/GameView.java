@@ -3,9 +3,12 @@ package robotturtles.g45.views.game;
 import robotturtles.g45.BoardImagePanel;
 import robotturtles.g45.Game;
 import robotturtles.g45.PlayerBoard;
+import robotturtles.g45.board.BoardWall;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,32 @@ public class GameView {
                     boardCells[i][j].setEnabled(false);
                     boardCells[i][j].setOpaque(false);
                 }
+            }
+        }
+
+        @Override
+        public void onBoardCellClick(int xPos, int yPos) {
+            int wallIdx = -1;
+            for (int i = 0; i < 5; i++) {
+                if (playerBoards.get(activePlayerIndex).getPanel()[0][i].isSelected()) {
+                    wallIdx = i;
+                }
+            }
+            if (wallIdx > -1) {
+                Game.board.getBoard()[xPos][yPos] = wallIdx > 1 ? BoardWall.BRICK.getSprite() : BoardWall.ICE.getSprite();
+                JButton boardCell = boardCells[xPos][yPos];
+                boardCell.setIcon(new ImageIcon(wallIdx > 1 ? BoardWall.BRICK.getSprite().getSprite() : BoardWall.ICE.getSprite().getSprite()));
+                boardCell.setDisabledIcon(new ImageIcon(wallIdx > 1 ? BoardWall.BRICK.getSprite().getSprite() : BoardWall.ICE.getSprite().getSprite()));
+                boardCell.setEnabled(false);
+                boardCell.setOpaque(false);
+                playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].setSelected(false);
+                playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].setIcon(null);
+                playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].setDisabledIcon(null);
+                playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].removeItemListener(playerBoards.get(activePlayerIndex).getPanel()[0][wallIdx].getItemListeners()[0]);
+                playerBoards.get(activePlayerIndex).afterAction();
+
+
+                //TODO: Rajouter ditch
             }
         }
 
@@ -106,11 +135,12 @@ public class GameView {
         return new JPanel(new GridLayout(3, 5));
     }
 
-    private JButton createBoardCell(ImageIcon imageIcon) {
+    private JButton createBoardCell(ImageIcon imageIcon, int xPos, int yPos) {
         JButton button = new JButton(imageIcon);
         button.setDisabledIcon(imageIcon);
         button.setEnabled(false);
         button.setOpaque(false);
+        button.addActionListener(new OnBoardCellActionListener(xPos, yPos));
         return button;
     }
 
@@ -118,7 +148,7 @@ public class GameView {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (Game.board.getSquare(i, j).getSprite() != null) {
-                    JButton boardCell = createBoardCell(new ImageIcon(Game.board.getSquare(i, j).getSprite()));
+                    JButton boardCell = createBoardCell(new ImageIcon(Game.board.getSquare(i, j).getSprite()), i, j);
                     boardCells[i][j] = boardCell;
                     boardPanel.add(boardCell);
                 }
@@ -157,5 +187,21 @@ public class GameView {
         rootPanel.setBackground(Game.getPlayers()[activePlayerIndex].turtle.getColor());
         infoPlayerLabel.setText(numPlayer());
         fillPlayerPanel();
+    }
+
+    private class OnBoardCellActionListener implements ActionListener {
+
+        private int xPos;
+        private int yPos;
+
+        OnBoardCellActionListener(int xPos, int yPos) {
+            this.xPos = xPos;
+            this.yPos = yPos;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            gameDelegate.onBoardCellClick(xPos, yPos);
+        }
     }
 }

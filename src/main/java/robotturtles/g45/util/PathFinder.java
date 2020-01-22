@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /** Utility class to compute paths in {@link robotturtles.g45.util.TraversableBoard TraversableBoard}. */
-public final class PathFinder {
+public final class PathFinder<T> {
     /** Board to traverse. */
-    private final TraversableBoard board;
+    private final TraversableBoard<T> board;
 
     /** Coordinates of the starting square. */
     private final int[] from;
@@ -40,7 +40,7 @@ public final class PathFinder {
      * @param to Coordinates of the goal square.
      * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
      */
-    PathFinder(final TraversableBoard board, final int[] from, final int[] to) throws IllegalArgumentException {
+    PathFinder(final TraversableBoard<T> board, final int[] from, final int[] to) throws IllegalArgumentException {
         this.board = board;
         if (board.checkSquare(from)) this.from = from;
         else throw new IllegalArgumentException("'from' is invalid.");
@@ -55,8 +55,8 @@ public final class PathFinder {
      * @param to Coordinates of the goal square.
      * @throws IllegalArgumentException if {@code from} or {@code to} are invalid.
      */
-    public PathFinder(final Object[][] board, final List<Object> obstacles, final int[] from, final int[] to) throws IllegalArgumentException {
-        this(new TraversableBoard(board, obstacles), from, to);
+    public PathFinder(final T[][] board, final List<T> obstacles, final int[] from, final int[] to) throws IllegalArgumentException {
+        this(new TraversableBoard<T>(board, obstacles), from, to);
     }
 
 
