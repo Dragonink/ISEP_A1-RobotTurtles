@@ -3,6 +3,7 @@ package robotturtles.g45;
 import robotturtles.g45.board.BoardWall;
 import robotturtles.g45.board.Laser;
 import robotturtles.g45.board.Turtle;
+import robotturtles.g45.board.Void;
 import robotturtles.g45.player.Card;
 import robotturtles.g45.views.game.GameDelegate;
 
@@ -170,6 +171,8 @@ public final class Player {
                                 for (Integer[] jewel : Game.board.getJewels())
                                     if (pos[0].equals(jewel[0]) && pos[1].equals(jewel[1])) {// Win if square is jewel
                                         Game.board.resetSquare(turtle.getPos()[0], turtle.getPos()[1]);
+                                        this.publish(turtle);
+                                        Thread.sleep(2000);
                                         return true;
                                     }
                             }
@@ -180,9 +183,11 @@ public final class Player {
                         }
                     } else if (card.equals(Card.FRONT_LASER)) {
                         Laser laser = Laser.LASER;
+                        Void empty = Void.VOID;
                         Integer[] pos = turtle.getPos();
                         int direction = 1;
                         do {
+                            Game.board.getBoard()[laser.getPos()[0]][laser.getPos()[1]] = new BoardSprite(null);
                             switch (turtle.getRotation()) {
                                 case 0:
                                     pos[0] -= direction;
@@ -206,6 +211,10 @@ public final class Player {
                                 laser.setPos(pos[0], pos[1]);
                                 this.publish(laser);
                                 Thread.sleep(2000);
+                                empty.setPos(pos[0], pos[1]);
+                                this.publish(empty);
+                                Thread.sleep(2000);
+                                return false;
                             } else {
                                 for (Player player : Game.getPlayers())
                                     if (player.turtle.getPos()[0].equals(pos[0]) && player.turtle.getPos()[1].equals(pos[1])) {
@@ -227,7 +236,10 @@ public final class Player {
                                         break;
                                     }
                             }
-                        } while (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
+                        } while (pos[0] >= 0 && pos[0] < 7 && pos[1] >= 0 && pos[1] < 7 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
+                        empty.setPos(laser.getPos()[0], laser.getPos()[1]);
+                        this.publish(empty);
+                        Thread.sleep(2000);
                     }
                 }
                 return false;
@@ -249,9 +261,7 @@ public final class Player {
                     if (get()) {
                         gameDelegate.onPlayerSuccess();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }

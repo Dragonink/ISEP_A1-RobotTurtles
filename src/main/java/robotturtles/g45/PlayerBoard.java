@@ -166,7 +166,7 @@ public final class PlayerBoard {
 
             if (index == -1) {
                 Game.getPlayers()[numPlayer].executeProgram(delegate);
-                hasDoneAction = true;
+                afterAction();
             } else {
                 Game.getPlayers()[numPlayer].addToProgram(index);
                 panel[2][index].setIcon(null);
@@ -229,6 +229,10 @@ public final class PlayerBoard {
                 panel[2][index].setEnabled(true);
                 panel[1][0].setEnabled(!hasDoneAction);
                 panel[1][2].setEnabled(true);
+            } else if (hasDoneAction == true && itemEvent.getStateChange() == ItemEvent.DESELECTED) {
+                togglePlayerPanel(false);
+                panel[1][4].setEnabled(true);
+                toggleHandCards(true);
             } else {
                 togglePlayerPanel(true);
                 panel[1][2].setEnabled(false);

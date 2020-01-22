@@ -18,7 +18,7 @@ public final class Board {
     private final BoardSprite[][] board = new BoardSprite[8][8];
 
     final List<Integer[]> getTurtles() {
-        List<Integer[]> turtles = new ArrayList<Integer[]>();
+        List<Integer[]> turtles = new ArrayList<>();
         for (Player player : Game.getPlayers()) turtles.add(player.turtle.getPos());
         return turtles;
     }
