@@ -5,9 +5,6 @@
 
 [Game{bg:purple}]
 
-[<<enum>>;GameState]
-[Game]<-.-nested[<<enum>>;GameState]
-
 [Board]
 [Game]++-1[Board]
 
@@ -36,18 +33,6 @@
 [Game]++-1[PlayerBoard]
 [<<interface>>;GameDelegate]1-++[PlayerBoard]
 
-[OnDeckActionListener]
-[PlayerBoard]<-.-nested[OnDeckActionListener]
-
-[OnHandActionListener]
-[PlayerBoard]<-.-nested[OnHandActionListener]
-
-[OnPlayActionListener]
-[PlayerBoard]<-.-nested[OnPlayActionListener]
-
-[OnWallActionListener]
-[PlayerBoard]<-.-nested[OnWallActionListener]
-
 [BackgroundImagePanel]
 
 [BoardImagePanel]
@@ -73,9 +58,6 @@
 [BoardImagePanel]<->[GameView]
 [Game]<->[GameView]
 
-[OnBoardCellActionListener]
-[GameView]<-.-nested[OnBoardCellActionListener]
-
 [<<interface>>;ChoosePlayerDelegate]
 
 [ChoosePlayerView]
@@ -83,14 +65,6 @@
 [<<interface>>;ChoosePlayerDelegate]1-++[ChoosePlayerView]
 [<<enum>>;Turtle]4-+[ChoosePlayerView]
 [Game]<->[ChoosePlayerView]
-
-[OnCancelActionListener]
-[ChoosePlayerView]<-.-nested[OnCancelActionListener]
-
-[OnCardActionListener]
-[ChoosePlayerView]<-.-nested[OnCardActionListener]
-
-[ChoosePlayerView]<-.-nested[OnPlayActionListener]
 
 [TraversableBoard<T>]
 
