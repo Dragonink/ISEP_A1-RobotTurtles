@@ -4,12 +4,11 @@ import robotturtles.g45.BoardSprite;
 
 public enum BoardWall {
     BRICK("stoneWall.jpg"),
-    ICE("iceWall.jpg"),
-    VOID(null);
+    ICE("iceWall.jpg");
 
     private final BoardSprite sprite;
 
-    private BoardWall(String spriteName){
+    BoardWall(String spriteName) {
         sprite = (spriteName != null) ? new BoardSprite(spriteName): null ;
     }
 
