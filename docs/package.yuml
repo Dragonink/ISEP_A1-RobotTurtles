@@ -1,0 +1,15 @@
+// {type:package}
+// {direction:topDown}
+// {generate:true}
+
+
+// Main package
+[note:Main package{bg:white}]-[robotturtles.g45{bg:white}]->[board{bg:white}]
+[robotturtles.g45{bg:white}]->[player{bg:white}]
+[robotturtles.g45{bg:white}]->[views{bg:white}]->[choosePlayer{bg:white}]
+[views{bg:white}]->[game{bg:white}]
+
+// Libraries
+[note:Libraries]-[java]->[awt{bg:green}]->[event{bg:red}]
+[java]->[util{bg:purple}]
+[note:Libraries]-[javax]->[swing{bg:blue}]
