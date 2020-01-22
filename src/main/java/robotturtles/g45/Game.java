@@ -2,6 +2,7 @@ package robotturtles.g45;
 
 import robotturtles.g45.views.choosePlayer.ChoosePlayerView;
 import robotturtles.g45.views.game.GameView;
+import robotturtles.g45.views.winner.WinnerView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,8 @@ public final class Game {
 
     enum GameState {
         CHOOSEPLAYER,
-        PLAYING
+        PLAYING,
+        WINNER
     }
 
     private static JFrame window = createMainWindow();
@@ -93,6 +95,11 @@ public final class Game {
         window.add(gameView.getRootPanel());
     }
 
+    private static void drawWinnerView(){
+        WinnerView winnerView = new WinnerView();
+        //window.add(winnerView.getRootPanel);
+    }
+
     private static void draw(final GameState state) {
         window.getContentPane().removeAll();
         switch (state) {
@@ -102,6 +109,8 @@ public final class Game {
             case PLAYING:
                 drawGameView();
                 break;
+            case WINNER:
+                drawWinnerView();
         }
         window.setVisible(true);
     }
@@ -112,6 +121,6 @@ public final class Game {
      * @param args
      */
     public static void main(String[] args) {
-        draw(GameState.CHOOSEPLAYER);
+        draw(GameState.WINNER);
     }
 }

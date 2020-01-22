@@ -109,7 +109,7 @@ public final class Player {
     /**
      * Executes the player's program.
      */
-    public final void executeProgram(Card card) {
+    public final void executeProgram(Card card) { //retourner vrai ou faux selon si il reste un joueur et passer au joeur suivant si le joeur a atteint le joyau
         if (card.equals(Card.FRONT_ROTATE_LEFT)) turtle.setRotation(turtle.getRotation() - 1);
         else if (card.equals(Card.FRONT_ROTATE_RIGHT)) turtle.setRotation(turtle.getRotation() + 1);
         else if (card.equals(Card.FRONT_FORWARD)) {
@@ -145,6 +145,9 @@ public final class Player {
                     }
                     for (Integer[] jewel : Game.board.getJewels()) if (pos[0].equals(jewel[0]) && pos[1].equals(jewel[1])) {// Win if square is jewel
                         Game.playerWins(this);
+                        if (Game.getPlayers().length <2){
+                            return;
+                        }
                         Game.board.resetSquare(turtle.getPos()[0], turtle.getPos()[1]);
                         return;
                     }
