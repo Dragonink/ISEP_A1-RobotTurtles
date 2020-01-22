@@ -109,8 +109,7 @@ public final class Player {
     /**
      * Executes the player's program.
      */
-    public final void executeProgram() {
-        for (Card card = program.poll(); card != null; card = program.poll()) {
+    public final void executeProgram(Card card) {
             if (card.equals(Card.FRONT_ROTATE_LEFT)) turtle.setRotation(turtle.getRotation() - 1);
             else if (card.equals(Card.FRONT_ROTATE_RIGHT)) turtle.setRotation(turtle.getRotation() + 1);
             else if (card.equals(Card.FRONT_FORWARD)) {
@@ -186,7 +185,6 @@ public final class Player {
                 } while (pos[0] > 0 && pos[0] < 7 && pos[1] > 0 && pos[1] < 7 && !Game.board.getSquare(pos[0], pos[1]).equals(BoardWall.BRICK.getSprite()));
             }
         }
-    }
 
     public final void ditchCard(final int cardIdx) {
         ditchedCards.add(hand[cardIdx]);
